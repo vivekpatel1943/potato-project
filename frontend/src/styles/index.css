@@ -1,0 +1,36 @@
+@import "tailwindcss";
+
+/* ── Custom Theme (Tailwind v4 @theme directive) ──────── */
+@theme {
+  /* Core palette — 70% warm white, 20% charcoal, 10% orange */
+  --color-primary: #F97316;
+  --color-primary-dark: #EA580C;
+  --color-primary-light: #FED7AA;
+  --color-primary-ghost: #FFF7ED;
+
+  --color-bg: #FFFBF5;
+  --color-surface: #FFFFFF;
+  --color-text: #18181B;
+  --color-text-secondary: #71717A;
+  --color-border: #E4E4E7;
+  --color-success: #16A34A;
+  --color-error: #DC2626;
+
+  /* Typography */
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: "JetBrains Mono", "Fira Code", monospace;
+}
+
+/* ── Base layer ────────────────────────────────────────── */
+@layer base {
+  body {
+    @apply bg-bg text-text font-sans antialiased;
+    line-height: 1.6;
+    min-height: 100dvh;
+  }
+
+  /* Smooth focus outlines across all interactive elements */
+  *:focus-visible {
+    @apply outline-none ring-2 ring-primary-light ring-offset-1;
+  }
+}

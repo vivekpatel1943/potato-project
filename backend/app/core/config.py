@@ -15,9 +15,12 @@ class Settings(BaseSettings):
     access_token_expire_minutes: int = 30
     refresh_token_expire_days: int = 7
 
-    # Email (Zoho ZeptoMail)
-    zeptomail_api_key: str
-    zeptomail_from_address: str
+    # Email (SMTP)
+    smtp_host: str
+    smtp_port: int = 587
+    smtp_user: str
+    smtp_password: str
+    smtp_from_address: str
 
     # Storage (Cloudflare R2)
     r2_account_id: str
@@ -28,3 +31,15 @@ class Settings(BaseSettings):
     # otp 
     OTP_EXPIRY_SECONDS:int = 300  # 5 minutes
     OTP_LENGTH:int = 6
+
+    # Rate limiting
+    otp_rate_limit_seconds: int = 60  # 1 request per IP per 60s
+    phone_rate_limit_seconds: int = 60
+
+    # CORS
+    cors_origins: str = "http://localhost:5173"  # comma-separated for multiple
+
+    # Phone verification (WhatsApp)
+    whatsapp_verify_number: str = "918103614609"
+    phone_verify_expiry_seconds: int = 300
+    phone_verify_code_length: int = 6

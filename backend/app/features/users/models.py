@@ -21,8 +21,8 @@ class User(Base):
     email: Mapped[str] = mapped_column(
         String(255), unique=True, index=True, nullable=False
     )
-    full_name: Mapped[str] = mapped_column(String(255), nullable=False)
-    phone: Mapped[str] = mapped_column(String(20), nullable=False)
+    user_name: Mapped[str] = mapped_column(String(255), unique=True, nullable=False)
+    phone: Mapped[str | None] = mapped_column(String(20), nullable=True)
 
     # Every user starts as a customer. Becoming a worker requires
     # creating a worker_profile and getting verified.
@@ -31,6 +31,7 @@ class User(Base):
     # Account status
     is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
     is_email_verified: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    is_phone_verified: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
 
     # Timestamps
     created_at: Mapped[datetime] = mapped_column(

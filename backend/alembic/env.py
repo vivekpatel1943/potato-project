@@ -6,7 +6,7 @@ from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
 
 # importing all the models 
-import app.models.models
+import app.models.model_registry
 
 # imports the base class
 from app.db.base import Base as  CoreBase
