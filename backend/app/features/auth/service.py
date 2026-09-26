@@ -148,6 +148,8 @@ async def verify_otp(
         "token_type": "bearer",
         "is_new_user": is_new_user,
         "user_name": user.user_name,
+        "role": user.role.value,
+        "is_phone_verified": user.is_phone_verified,
     }
 
 
@@ -214,5 +216,7 @@ async def refresh_tokens(
         "token_type": "bearer",
         "is_new_user": False,
         "user_name": user.user_name,
+        "role": user.role.value,
+        "is_phone_verified": user.is_phone_verified,
     }
 

@@ -58,7 +58,7 @@ api.interceptors.response.use(
       originalRequest._retry = true;
       isRefreshing = true;
 
-      const { refreshToken, setTokens, logout } = useAuthStore.getState();
+      const { refreshToken, setTokens, setUser, setPhoneVerified, logout } = useAuthStore.getState();
 
       if (!refreshToken) {
         logout();
@@ -72,6 +72,8 @@ api.interceptors.response.use(
         );
 
         setTokens(data.access_token, data.refresh_token);
+        setUser(data.user_name, data.is_new_user, data.role);
+        setPhoneVerified(data.is_phone_verified);
         processQueue(null, data.access_token);
 
         originalRequest.headers.Authorization = `Bearer ${data.access_token}`;

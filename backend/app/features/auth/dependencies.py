@@ -9,6 +9,7 @@ from sqlalchemy import select
 from app.db.session import get_async_db
 from app.core.config import Settings
 from app.features.users.models import User
+from app.features.users.enums import Role
 
 settings = Settings()
 security = HTTPBearer()
@@ -59,3 +60,15 @@ async def get_current_user(
         )
 
     return user
+
+
+async def get_current_admin(
+    current_user: User = Depends(get_current_user),
+) -> User:
+    """Ensure the authenticated user has the ADMIN role."""
+    if current_user.role != Role.ADMIN:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Admin privileges required.",
+        )
+    return current_user

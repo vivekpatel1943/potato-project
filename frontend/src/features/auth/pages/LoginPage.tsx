@@ -125,8 +125,8 @@ export default function LoginPage() {
         });
 
         setTokens(data.access_token, data.refresh_token);
-        setUser(data.user_name, data.is_new_user);
-        setPhoneVerified(false); // Will be fetched from user profile later
+        setUser(data.user_name, data.is_new_user, data.role);
+        setPhoneVerified(data.is_phone_verified);
         setAuthStep("authenticated");
 
         navigate("/dashboard", { replace: true });

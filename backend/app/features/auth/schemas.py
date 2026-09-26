@@ -24,3 +24,5 @@ class TokenResponse(BaseModel):
     token_type: str = "bearer"
     is_new_user: bool  # So the frontend knows whether to show onboarding
     user_name: str  # Auto-generated from email
+    role: str  # "user" | "admin"
+    is_phone_verified: bool

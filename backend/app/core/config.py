@@ -23,10 +23,14 @@ class Settings(BaseSettings):
     smtp_from_address: str
 
     # Storage (Cloudflare R2)
-    r2_account_id: str
     r2_access_key_id: str
     r2_secret_access_key: str
-    r2_bucket_name: str
+    r2_endpoint: str
+    r2_private_bucket: str
+    r2_public_bucket: str
+    r2_potato_public_base_url: str
+    max_image_upload_mb: int = 10
+    max_doc_upload_mb: int = 20
 
     # otp 
     OTP_EXPIRY_SECONDS:int = 300  # 5 minutes

@@ -12,6 +12,7 @@ interface AuthState {
   userName: string | null;
   isNewUser: boolean;
   isPhoneVerified: boolean;
+  role: "user" | "admin";
 
   // Auth flow UI state (transient — not persisted)
   authStep: AuthStep;
@@ -20,7 +21,7 @@ interface AuthState {
 
   // Actions
   setTokens: (access: string, refresh: string) => void;
-  setUser: (userName: string, isNew: boolean) => void;
+  setUser: (userName: string, isNew: boolean, role?: "user" | "admin") => void;
   setPhoneVerified: (verified: boolean) => void;
   setAuthStep: (step: AuthStep) => void;
   setEmail: (email: string) => void;
@@ -36,6 +37,7 @@ export const useAuthStore = create<AuthState>()(
       userName: null,
       isNewUser: false,
       isPhoneVerified: false,
+      role: "user",
       authStep: "email",
       email: null,
       otpCooldown: 0,
@@ -43,7 +45,8 @@ export const useAuthStore = create<AuthState>()(
       setTokens: (access, refresh) =>
         set({ accessToken: access, refreshToken: refresh }),
 
-      setUser: (userName, isNew) => set({ userName, isNewUser: isNew }),
+      setUser: (userName, isNew, role) =>
+        set({ userName, isNewUser: isNew, role: role ?? "user" }),
 
       setPhoneVerified: (verified) => set({ isPhoneVerified: verified }),
 
@@ -60,6 +63,7 @@ export const useAuthStore = create<AuthState>()(
           userName: null,
           isNewUser: false,
           isPhoneVerified: false,
+          role: "user",
           authStep: "email",
           email: null,
           otpCooldown: 0,
@@ -74,6 +78,7 @@ export const useAuthStore = create<AuthState>()(
         userName: state.userName,
         isNewUser: state.isNewUser,
         isPhoneVerified: state.isPhoneVerified,
+        role: state.role,
       }),
     }
   )

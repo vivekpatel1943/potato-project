@@ -1,8 +1,8 @@
 import uuid
 from datetime import datetime
 
-from sqlalchemy import String, DateTime, Boolean, ForeignKey, func , Enum
-from sqlalchemy.dialects.postgresql import UUID, ARRAY
+from sqlalchemy import String, DateTime, Boolean, ForeignKey, Integer, func, Enum
+from sqlalchemy.dialects.postgresql import UUID, ARRAY, JSONB
 from typing import TYPE_CHECKING
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -11,6 +11,30 @@ from app.features.workers.enums import VerificationStatus, ProofType, DocumentTy
 
 if TYPE_CHECKING:
     from app.features.categories.models import Subcategory
+
+
+class WorkerOnboardingDraft(Base):
+    """Temporary storage for in-progress worker onboarding data.
+
+    One row per user. Deleted once the user completes onboarding and
+    the real WorkerProfile is created.
+    """
+    __tablename__ = "worker_onboarding_drafts"
+
+    user_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("users.id", ondelete="CASCADE"),
+        primary_key=True,
+    )
+    current_step: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    draft_data: Mapped[dict] = mapped_column(JSONB, default=dict, nullable=False)
+
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now(), nullable=False
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now(), onupdate=func.now(), nullable=False
+    )
 
 class WorkerVerificationDocument(Base):
     __tablename__ = "worker_verification_documents"
@@ -86,6 +110,9 @@ class WorkerProfile(Base):
 
     # Worker's profile picture
     avatar_url: Mapped[str] = mapped_column(String, nullable=False)
+
+    # Whether the worker is currently accepting jobs (must be toggled on manually)
+    is_available: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
 
     # The capabilities/services this worker offers
     capabilities: Mapped[list["WorkerCapability"]] = relationship(
