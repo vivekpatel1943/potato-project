@@ -24,11 +24,11 @@ const adminCards: AdminCard[] = [
     ready: true,
   },
   {
-    to: "/admin",
+    to: "/admin/categories",
     icon: "📂",
     title: "Category Management",
     description: "Toggle visibility of service categories.",
-    ready: false,
+    ready: true,
   },
   {
     to: "/admin",

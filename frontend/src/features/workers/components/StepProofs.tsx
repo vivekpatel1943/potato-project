@@ -1,41 +1,206 @@
+import { useState, useRef, useEffect } from "react";
+import type { ProofData } from "../schemas/workerOnboarding";
+import api from "../../../shared/lib/api";
+
 interface Props {
-  onNext: () => void;
+  subcategoryIds: string[];
+  proofs: ProofData[];
+  onNext: (proofs: ProofData[]) => void;
   onBack: () => void;
 }
 
-export default function StepProofs({ onNext, onBack }: Props) {
+interface Category {
+  id: string;
+  name: string;
+  subcategories: { id: string; name: string }[];
+}
+
+export default function StepProofs({ subcategoryIds, proofs, onNext, onBack }: Props) {
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [localProofs, setLocalProofs] = useState<ProofData[]>(proofs);
+  const [expandedId, setExpandedId] = useState<string | null>(null);
+  
+  const [videoUrls, setVideoUrls] = useState<Record<string, string>>({});
+  const [isUploading, setIsUploading] = useState<Record<string, boolean>>({});
+  const fileInputRefs = useRef<Record<string, HTMLInputElement | null>>({});
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const { data } = await api.get("/categories/");
+        setCategories(data);
+      } catch (err) {
+        console.error("Failed to load categories", err);
+      }
+    };
+    fetchCategories();
+  }, []);
+
+  const selectedServices = subcategoryIds.map(id => {
+    for (const cat of categories) {
+      const sub = cat.subcategories.find(s => s.id === id);
+      if (sub) return { id: sub.id, name: sub.name, catName: cat.name };
+    }
+    return { id, name: "Loading...", catName: "" };
+  }).filter(s => s.name !== "Loading..." || categories.length === 0);
+
+  // Auto-expand first on load
+  useEffect(() => {
+    if (!expandedId && selectedServices.length > 0 && selectedServices[0].id) {
+      setExpandedId(selectedServices[0].id);
+    }
+  }, [selectedServices, expandedId]);
+
+  const handleAddVideoLink = (subId: string) => {
+    const url = videoUrls[subId];
+    if (!url || !url.trim()) return;
+    try {
+      new URL(url); // basic validation
+      setLocalProofs(prev => [...prev, { subcategory_id: subId, proof_type: "video", url: url.trim() }]);
+      setVideoUrls(prev => ({ ...prev, [subId]: "" }));
+    } catch {
+      alert("Please enter a valid URL");
+    }
+  };
+
+  const removeProof = (index: number) => {
+    setLocalProofs(prev => prev.filter((_, i) => i !== index));
+  };
+
+  const handleFileSelect = async (subId: string, e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const isImage = file.type.startsWith("image/");
+    const isPdf = file.type === "application/pdf";
+    if (!isImage && !isPdf) {
+      alert("Please select an image or PDF file");
+      return;
+    }
+
+    if (file.size > 10 * 1024 * 1024) {
+      alert("File must be less than 10MB");
+      return;
+    }
+
+    setIsUploading(prev => ({ ...prev, [subId]: true }));
+    try {
+      const { data } = await api.post("/workers/upload-url", {
+        file_name: file.name,
+        content_type: file.type,
+        bucket_type: "public",
+      });
+
+      await fetch(data.upload_url, {
+        method: "PUT",
+        body: file,
+        headers: { "Content-Type": file.type },
+      });
+
+      setLocalProofs(prev => [
+        ...prev, 
+        { subcategory_id: subId, proof_type: isImage ? "image" : "doc", url: data.file_url }
+      ]);
+    } catch {
+      alert("Failed to upload file. Please try again.");
+    } finally {
+      setIsUploading(prev => ({ ...prev, [subId]: false }));
+      if (fileInputRefs.current[subId]) {
+        fileInputRefs.current[subId]!.value = "";
+      }
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div className="text-center">
         <h3 className="text-lg font-bold text-text mb-1">Proof of Work</h3>
         <p className="text-sm text-text-secondary">
-          Upload photos, videos, or documents showing your past work. This helps customers trust your skills.
+          Upload photos, PDFs, or video links showing your past work for each service.
         </p>
       </div>
 
-      {/* Skip notice */}
       <div className="bg-primary-ghost border border-primary-light rounded-xl p-4 text-center">
         <p className="text-sm text-text-secondary">
-          <span className="font-semibold text-text">This step is optional.</span>{" "}
-          You can always add proof of work later from your profile.
+          <span className="font-semibold text-text">This step is optional</span> but highly recommended.
         </p>
       </div>
 
-      {/* Placeholder for future proof upload UI */}
-      <div className="bg-surface border border-border rounded-xl p-8 text-center">
-        <svg className="w-12 h-12 text-text-secondary/30 mx-auto mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-        </svg>
-        <p className="text-sm text-text-secondary">
-          Proof of work uploads coming soon.
-        </p>
-        <p className="text-xs text-text-secondary/60 mt-1">
-          You can skip this for now and add them from your profile later.
-        </p>
+      <div className="space-y-4">
+        {selectedServices.map(service => (
+          <div key={service.id} className="border border-border rounded-xl bg-surface overflow-hidden">
+            <button
+              onClick={() => setExpandedId(expandedId === service.id ? null : service.id)}
+              className="w-full px-4 py-4 flex justify-between items-center bg-bg font-semibold text-sm transition-colors hover:bg-bg/70"
+            >
+              <span>{service.name}</span>
+              <span className="text-text-secondary">{expandedId === service.id ? '▲' : '▼'}</span>
+            </button>
+            
+            {expandedId === service.id && (
+              <div className="p-4 space-y-4">
+                {/* Drag and Drop Zone equivalent */}
+                <div 
+                  onClick={() => fileInputRefs.current[service.id]?.click()}
+                  className={`border-2 border-dashed border-border rounded-lg p-6 text-center cursor-pointer transition-colors hover:bg-bg/50 ${isUploading[service.id] ? 'opacity-50 pointer-events-none' : ''}`}
+                >
+                  <p className="text-sm font-medium text-text">
+                    {isUploading[service.id] ? 'Uploading...' : 'Click to upload images or PDFs'}
+                  </p>
+                  <p className="text-xs text-text-secondary mt-1">Max 10MB per file</p>
+                </div>
+                <input
+                  type="file"
+                  accept="image/*,application/pdf"
+                  className="hidden"
+                  ref={el => fileInputRefs.current[service.id] = el}
+                  onChange={e => handleFileSelect(service.id, e)}
+                />
+
+                {/* Video URL Input */}
+                <div className="flex gap-2">
+                  <input 
+                    type="url" 
+                    placeholder="YouTube/Vimeo URL" 
+                    value={videoUrls[service.id] || ''}
+                    onChange={e => setVideoUrls(prev => ({ ...prev, [service.id]: e.target.value }))}
+                    className="flex-1 px-3 py-2 border border-border rounded-lg text-sm bg-bg outline-none focus:border-primary" 
+                  />
+                  <button 
+                    onClick={() => handleAddVideoLink(service.id)}
+                    className="px-4 py-2 bg-text text-white rounded-lg text-sm font-medium hover:bg-text/90 transition-colors"
+                  >
+                    Add Link
+                  </button>
+                </div>
+
+                {/* Proofs List */}
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-4">
+                  {localProofs.map((proof, i) => {
+                    if (proof.subcategory_id !== service.id) return null;
+                    return (
+                      <div key={i} className="relative aspect-square border border-border rounded-lg overflow-hidden group bg-bg flex items-center justify-center">
+                        {proof.proof_type === 'image' && <img src={proof.url} className="w-full h-full object-cover" alt="proof" />}
+                        {proof.proof_type === 'video' && <div className="text-center text-xs font-medium"><span className="text-2xl block mb-1">🎥</span>Video</div>}
+                        {proof.proof_type === 'doc' && <div className="text-center text-xs font-medium"><span className="text-2xl block mb-1">📄</span>PDF</div>}
+                        
+                        <button 
+                          onClick={() => removeProof(localProofs.indexOf(proof))}
+                          className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+          </div>
+        ))}
       </div>
 
-      {/* Navigation */}
-      <div className="flex items-center justify-between pt-4">
+      <div className="flex items-center justify-between pt-4 border-t border-border mt-6">
         <button
           type="button"
           onClick={onBack}
@@ -43,23 +208,14 @@ export default function StepProofs({ onNext, onBack }: Props) {
         >
           ← Back
         </button>
-        <div className="flex items-center gap-3">
-          <button
-            type="button"
-            onClick={onNext}
-            className="text-sm text-text-secondary hover:text-text transition-colors cursor-pointer"
-          >
-            Skip for now
-          </button>
-          <button
-            type="button"
-            onClick={onNext}
-            className="px-8 py-3 bg-primary text-white font-semibold rounded-lg
-              hover:bg-primary-dark active:scale-[0.98] transition-all duration-200 cursor-pointer"
-          >
-            Continue
-          </button>
-        </div>
+        <button
+          type="button"
+          onClick={() => onNext(localProofs)}
+          className="px-8 py-3 bg-primary text-white font-semibold rounded-lg
+            hover:bg-primary-dark active:scale-[0.98] transition-all duration-200 cursor-pointer"
+        >
+          Continue
+        </button>
       </div>
     </div>
   );

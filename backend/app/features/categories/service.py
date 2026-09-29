@@ -24,7 +24,10 @@ async def get_all_categories(db: AsyncSession, redis: Redis | None = None) -> li
     # Cache miss — query DB
     result = await db.execute(
         select(Category)
-        .options(selectinload(Category.subcategories))
+        .where(Category.is_active == True)
+        .options(
+            selectinload(Category.subcategories.and_(Category.subcategories.property.mapper.class_.is_active == True))
+        )
         .order_by(Category.name)
     )
     categories = list(result.scalars().all())

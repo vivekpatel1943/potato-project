@@ -20,7 +20,21 @@ export const servicesStepSchema = z.object({
   subcategory_ids: z.array(z.string().uuid()).min(1, "Select at least one service"),
 });
 
+export const proofSchema = z.object({
+  subcategory_id: z.string().uuid(),
+  proof_type: z.enum(["image", "doc", "video"]),
+  url: z.string().url("Must be a valid URL"),
+  title: z.string().optional(),
+  description: z.string().optional(),
+});
+
+export const proofsStepSchema = z.object({
+  proofs: z.array(proofSchema).default([]),
+});
+
 export type AvatarStepData = z.infer<typeof avatarStepSchema>;
 export type DocumentData = z.infer<typeof documentSchema>;
 export type DocumentsStepData = z.infer<typeof documentsStepSchema>;
 export type ServicesStepData = z.infer<typeof servicesStepSchema>;
+export type ProofData = z.infer<typeof proofSchema>;
+export type ProofsStepData = z.infer<typeof proofsStepSchema>;

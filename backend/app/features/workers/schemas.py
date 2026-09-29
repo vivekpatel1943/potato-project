@@ -27,10 +27,14 @@ class CapabilityCreate(BaseModel):
 
 class WorkerProfileCreate(BaseModel):
     avatar_url: str
-    subcategory_ids: list[uuid.UUID] = Field(..., min_length=1)
     verification_documents: list[VerificationDocumentCreate] = Field(..., min_length=1)
-    # Optional proofs keyed by subcategory_id
-    proofs: dict[uuid.UUID, list[CapabilityProofCreate]] = {}
+    capabilities: list[CapabilityCreate] = Field(..., min_length=1)
+
+
+class WorkerProfileUpdate(BaseModel):
+    avatar_url: str
+    verification_documents: list[VerificationDocumentCreate] = Field(..., min_length=1)
+    capabilities: list[CapabilityCreate] = Field(..., min_length=1)
 
 
 class AvailabilityUpdate(BaseModel):

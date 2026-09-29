@@ -12,6 +12,7 @@ import WorkerOnboardingPage from "./features/workers/pages/WorkerOnboardingPage"
 import AdminDashboardPage from "./features/admin/dashboard/pages/AdminDashboardPage";
 import AdminRolesPage from "./features/admin/role_management/pages/AdminRolesPage";
 import AdminCachesPage from "./features/admin/caches/pages/AdminCachesPage";
+import AdminCategoriesPage from "./features/admin/category_management/pages/AdminCategoriesPage";
 
 export default function App() {
   return (
@@ -37,6 +38,7 @@ export default function App() {
               <Route path="/admin" element={<AdminDashboardPage />} />
               <Route path="/admin/roles" element={<AdminRolesPage />} />
               <Route path="/admin/caches" element={<AdminCachesPage />} />
+              <Route path="/admin/categories" element={<AdminCategoriesPage />} />
             </Route>
           </Route>
         </Route>

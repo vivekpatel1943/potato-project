@@ -1,8 +1,8 @@
 import { useState, useEffect, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import api from "../../../shared/lib/api";
 import { useAppStore } from "../../app/stores/appStore";
-import type { DocumentData } from "../schemas/workerOnboarding";
+import type { DocumentData, ProofData } from "../schemas/workerOnboarding";
 
 import StepPhoneVerify from "../components/StepPhoneVerify";
 import StepAvatar from "../components/StepAvatar";
@@ -22,6 +22,8 @@ const STEPS = [
 
 export default function WorkerOnboardingPage() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const isEditing = searchParams.get("edit") === "true";
   const { setWorkerProfile, setMode } = useAppStore();
 
   const [currentStep, setCurrentStep] = useState(0);
@@ -34,32 +36,47 @@ export default function WorkerOnboardingPage() {
   const [avatarUrl, setAvatarUrl] = useState("");
   const [documents, setDocuments] = useState<DocumentData[]>([]);
   const [subcategoryIds, setSubcategoryIds] = useState<string[]>([]);
+  const [proofs, setProofs] = useState<ProofData[]>([]);
 
-  // ── Load draft on mount ─────────────────────────────────────────
+  // ── Load data on mount ─────────────────────────────────────────
   useEffect(() => {
-    const loadDraft = async () => {
+    const loadData = async () => {
       try {
-        const { data } = await api.get("/workers/onboarding/draft");
-        setCurrentStep(data.current_step);
-        setAvatarUrl(data.draft_data.avatar_url || "");
-        setDocuments(data.draft_data.documents || []);
-        setSubcategoryIds(data.draft_data.subcategory_ids || []);
+        if (isEditing) {
+          const { data } = await api.get("/workers/me");
+          setAvatarUrl(data.avatar_url || "");
+          setDocuments(data.verification_documents || []);
+          setSubcategoryIds(data.capabilities.map((c: any) => c.subcategory_id));
+          const existingProofs = data.capabilities.flatMap((c: any) => 
+            (c.proofs || []).map((p: any) => ({ ...p, subcategory_id: c.subcategory_id }))
+          );
+          setProofs(existingProofs);
+          setCurrentStep(1); // skip phone verify since they already have a profile
+        } else {
+          const { data } = await api.get("/workers/onboarding/draft");
+          setCurrentStep(data.current_step);
+          setAvatarUrl(data.draft_data.avatar_url || "");
+          setDocuments(data.draft_data.documents || []);
+          setSubcategoryIds(data.draft_data.subcategory_ids || []);
+          setProofs(data.draft_data.proofs || []);
+        }
       } catch {
         // No draft found (404) — start fresh at step 0
       } finally {
         setIsLoadingDraft(false);
       }
     };
-    loadDraft();
-  }, []);
+    loadData();
+  }, [isEditing]);
 
   // ── Save draft helper (best-effort, non-blocking) ──────────────
   const saveDraft = useCallback(
-    async (step: number, overrides?: { avatar_url?: string; documents?: DocumentData[]; subcategory_ids?: string[] }) => {
+    async (step: number, overrides?: { avatar_url?: string; documents?: DocumentData[]; subcategory_ids?: string[]; proofs?: ProofData[] }) => {
       const draftData = {
         avatar_url: overrides?.avatar_url ?? avatarUrl,
         documents: overrides?.documents ?? documents,
         subcategory_ids: overrides?.subcategory_ids ?? subcategoryIds,
+        proofs: overrides?.proofs ?? proofs,
       };
       try {
         await api.put("/workers/onboarding/draft", {
@@ -70,7 +87,7 @@ export default function WorkerOnboardingPage() {
         // Draft save is best-effort; don't block the user
       }
     },
-    [avatarUrl, documents, subcategoryIds]
+    [avatarUrl, documents, subcategoryIds, proofs]
   );
 
   const goNext = () => setCurrentStep((s) => Math.min(s + 1, STEPS.length - 1));
@@ -81,16 +98,34 @@ export default function WorkerOnboardingPage() {
     setSubmitError(null);
 
     try {
-      await api.post("/workers/profile", {
+      const capabilities = subcategoryIds.map(subId => ({
+        subcategory_id: subId,
+        proofs: proofs
+          .filter(p => p.subcategory_id === subId)
+          .map(p => ({
+            proof_type: p.proof_type,
+            url: p.url,
+            title: p.title,
+            description: p.description
+          }))
+      }));
+
+      const payload = {
         avatar_url: avatarUrl,
-        subcategory_ids: subcategoryIds,
         verification_documents: documents.map((d) => ({
           document_type: d.document_type,
           document_url: d.document_url,
           document_number: d.document_number || null,
         })),
-        proofs: {},
-      });
+        capabilities: capabilities,
+      };
+
+      if (isEditing) {
+        await api.put("/workers/profile", payload);
+        await api.delete("/workers/onboarding/draft").catch(() => {});
+      } else {
+        await api.post("/workers/profile", payload);
+      }
 
       // Update app state
       setWorkerProfile(true, false, false);
@@ -153,7 +188,7 @@ export default function WorkerOnboardingPage() {
           >
             ← Cancel
           </button>
-          <h1 className="text-sm font-semibold text-text">Become a Worker</h1>
+          <h1 className="text-sm font-semibold text-text">{isEditing ? "Edit Worker Profile" : "Become a Worker"}</h1>
           <span className="text-xs text-text-secondary">
             {currentStep + 1}/{STEPS.length}
           </span>
@@ -207,7 +242,9 @@ export default function WorkerOnboardingPage() {
         )}
         {currentStep === 4 && (
           <StepProofs
-            onNext={() => { saveDraft(5); goNext(); }}
+            subcategoryIds={subcategoryIds}
+            proofs={proofs}
+            onNext={(newProofs) => { setProofs(newProofs); saveDraft(5, { proofs: newProofs }); goNext(); }}
             onBack={goBack}
           />
         )}
@@ -216,6 +253,7 @@ export default function WorkerOnboardingPage() {
             avatarUrl={avatarUrl}
             documents={documents}
             subcategoryIds={subcategoryIds}
+            proofs={proofs}
             isSubmitting={isSubmitting}
             onSubmit={handleSubmit}
             onBack={goBack}

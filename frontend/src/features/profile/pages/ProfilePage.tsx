@@ -150,9 +150,17 @@ export default function ProfilePage() {
       {/* Worker Profile Section */}
       {hasWorkerProfile && workerProfile ? (
         <div className="space-y-4">
-          <h3 className="text-sm font-semibold text-text-secondary uppercase tracking-wider">
-            Worker Profile
-          </h3>
+          <div className="flex items-center justify-between mb-2">
+            <h3 className="text-sm font-semibold text-text-secondary uppercase tracking-wider">
+              Worker Profile
+            </h3>
+            <button
+              onClick={() => navigate("/become-worker?edit=true")}
+              className="text-sm text-primary font-medium hover:underline flex items-center gap-1 cursor-pointer"
+            >
+              ✏️ Edit Profile
+            </button>
+          </div>
 
           {/* Availability Toggle */}
           <div className="bg-surface border border-border rounded-2xl p-5 sm:p-6">

@@ -19,7 +19,9 @@ from app.features.workers.models import (
     WorkerVerificationDocument,
     WorkerOnboardingDraft,
 )
-from app.features.workers.schemas import WorkerProfileCreate, CapabilityProofCreate
+from app.features.workers.schemas import WorkerProfileCreate, WorkerProfileUpdate, CapabilityProofCreate
+from app.features.workers.enums import VerificationStatus
+from app.features.categories.models import Subcategory
 
 logger = logging.getLogger(__name__)
 
@@ -222,18 +224,24 @@ async def create_worker_profile(
     )
     db.add(profile)
 
+    # 1.5 Validate subcategories
+    requested_sub_ids = [cap.subcategory_id for cap in data.capabilities]
+    valid_subs = await db.execute(select(Subcategory.id).where(Subcategory.id.in_(requested_sub_ids)))
+    valid_sub_ids = {row[0] for row in valid_subs.all()}
+    if len(valid_sub_ids) != len(requested_sub_ids):
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="One or more selected services are invalid.")
+
     # 2. Create capabilities (one per selected subcategory)
-    for sub_id in data.subcategory_ids:
+    for cap_data in data.capabilities:
         capability = WorkerCapability(
             worker_id=user.id,
-            subcategory_id=sub_id,
+            subcategory_id=cap_data.subcategory_id,
         )
         db.add(capability)
         await db.flush()  # get capability.id for proofs
 
         # Attach proofs if provided for this subcategory
-        proofs_for_sub: list[CapabilityProofCreate] = data.proofs.get(sub_id, [])
-        for proof_data in proofs_for_sub:
+        for proof_data in cap_data.proofs:
             proof = WorkerCapabilityProof(
                 worker_capability_id=capability.id,
                 proof_type=proof_data.proof_type,
@@ -279,9 +287,86 @@ async def get_worker_profile(
                 WorkerCapability.subcategory
             ),
             selectinload(WorkerProfile.verification_documents),
-        )
-    )
+        ))
     return result.scalars().first()
+
+
+async def update_worker_profile(
+    db: AsyncSession,
+    user: User,
+    data: WorkerProfileUpdate,
+) -> WorkerProfile:
+    """Update an existing worker profile, with smart diffing for verification status."""
+    
+    # 1. Fetch profile with all nested relationships
+    result = await db.execute(
+        select(WorkerProfile)
+        .options(
+            selectinload(WorkerProfile.verification_documents),
+            selectinload(WorkerProfile.capabilities).selectinload(WorkerCapability.proofs)
+        )
+        .where(WorkerProfile.user_id == user.id)
+    )
+    profile = result.scalars().first()
+    if not profile:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Profile not found.")
+
+    # 2. Diff Identity Documents
+    existing_docs = { (d.document_type, d.document_url, d.document_number) for d in profile.verification_documents }
+    incoming_docs = { (d.document_type, d.document_url, d.document_number) for d in data.verification_documents }
+
+    if existing_docs != incoming_docs:
+        profile.verification_status = VerificationStatus.PENDING
+        profile.verified_by = None
+        for doc in profile.verification_documents:
+            await db.delete(doc)
+        for doc_data in data.verification_documents:
+            db.add(WorkerVerificationDocument(worker_id=profile.user_id, **doc_data.model_dump()))
+
+    # 3. Update Avatar
+    profile.avatar_url = data.avatar_url
+
+    # 4. Validate Subcategories exist in taxonomy
+    requested_sub_ids = [cap.subcategory_id for cap in data.capabilities]
+    valid_subs = await db.execute(select(Subcategory.id).where(Subcategory.id.in_(requested_sub_ids)))
+    valid_sub_ids = {row[0] for row in valid_subs.all()}
+    
+    if len(valid_sub_ids) != len(requested_sub_ids):
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="One or more selected services are invalid.")
+
+    # 5. Sync Nested Capabilities & Proofs cleanly
+    existing_caps = { cap.subcategory_id: cap for cap in profile.capabilities }
+    new_sub_ids = set(requested_sub_ids)
+
+    # Delete removed services
+    for sub_id, cap in existing_caps.items():
+        if sub_id not in new_sub_ids:
+            await db.delete(cap)
+
+    # Upsert capabilities using the clean nested payload
+    for cap_data in data.capabilities:
+        if cap_data.subcategory_id in existing_caps:
+            cap = existing_caps[cap_data.subcategory_id]
+        else:
+            cap = WorkerCapability(worker_id=profile.user_id, subcategory_id=cap_data.subcategory_id)
+            db.add(cap)
+            await db.flush()
+
+        # Clear old proofs and add incoming ones directly from the nested payload
+        for proof in cap.proofs:
+            await db.delete(proof)
+        
+        for p_data in cap_data.proofs:
+            db.add(WorkerCapabilityProof(
+                worker_capability_id=cap.id,
+                **p_data.model_dump()
+            ))
+
+    await db.commit()
+    await db.refresh(profile)
+    
+    # Re-fetch with eager loads
+    return await get_worker_profile(db, user.id)
 
 
 async def toggle_availability(

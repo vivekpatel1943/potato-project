@@ -6,6 +6,7 @@ from app.features.auth.dependencies import get_current_user
 from app.features.users.models import User
 from app.features.workers.schemas import (
     WorkerProfileCreate,
+    WorkerProfileUpdate,
     WorkerProfileOut,
     AvailabilityUpdate,
     PresignedUrlRequest,
@@ -19,6 +20,7 @@ from app.features.workers.schemas import (
 )
 from app.features.workers.service import (
     create_worker_profile,
+    update_worker_profile,
     get_worker_profile,
     toggle_availability,
     generate_presigned_upload_url,
@@ -123,6 +125,17 @@ async def create_profile(
     profile = await create_worker_profile(db, user, body)
 
     # Build the response with subcategory names
+    return _build_profile_response(profile)
+
+
+@router.put("/profile", response_model=WorkerProfileOut)
+async def update_profile(
+    body: WorkerProfileUpdate,
+    user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_async_db),
+):
+    """Update an existing worker profile."""
+    profile = await update_worker_profile(db, user, body)
     return _build_profile_response(profile)
 
 
