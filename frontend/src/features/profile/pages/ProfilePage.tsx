@@ -168,14 +168,14 @@ export default function ProfilePage() {
               <div>
                 <h4 className="text-sm font-semibold text-text">Availability</h4>
                 <p className="text-xs text-text-secondary mt-0.5">
-                  {isAvailable
-                    ? "You're visible to customers"
-                    : "Toggle on to start seeing tasks"}
+                  {workerProfile.verification_status === "verified"
+                    ? (isAvailable ? "You're visible to customers" : "Toggle on to start seeing tasks")
+                    : "You must be verified to go online."}
                 </p>
               </div>
               <button
                 onClick={handleToggleAvailability}
-                disabled={isTogglingAvailability}
+                disabled={isTogglingAvailability || workerProfile.verification_status !== "verified"}
                 className={`relative w-14 h-8 rounded-full transition-all duration-300 cursor-pointer
                   disabled:opacity-50 disabled:cursor-not-allowed
                   ${isAvailable ? "bg-success" : "bg-border"}`}

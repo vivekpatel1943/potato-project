@@ -3,6 +3,7 @@ from datetime import datetime
 
 from sqlalchemy import String, DateTime, Boolean, ForeignKey, Integer, func, Enum
 from sqlalchemy.dialects.postgresql import UUID, ARRAY, JSONB
+from geoalchemy2 import Geometry
 from typing import TYPE_CHECKING
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -113,6 +114,10 @@ class WorkerProfile(Base):
 
     # Whether the worker is currently accepting jobs (must be toggled on manually)
     is_available: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+
+    # PostGIS Geometry column for fast radius matching
+    # SRID 4326 is the standard WGS 84 (GPS) coordinate system
+    home_base: Mapped[str | None] = mapped_column(Geometry(geometry_type='POINT', srid=4326), nullable=True)
 
     # The capabilities/services this worker offers
     capabilities: Mapped[list["WorkerCapability"]] = relationship(

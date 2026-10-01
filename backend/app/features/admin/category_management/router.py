@@ -40,7 +40,7 @@ async def create_subcategory(
     _admin=Depends(get_current_admin),
 ):
     """Create a new subcategory."""
-    subcategory = await service.create_subcategory(db, redis, body.category_id, body.name, body.description)
+    subcategory = await service.create_subcategory(db, redis, body.category_id, body.name, body.description,body.keywords)
     return subcategory
 
 
@@ -72,5 +72,5 @@ async def update_subcategory(
 ):
     """Update a subcategory."""
     return await service.update_subcategory(
-        db, redis, subcategory_id, body.is_active, body.name, body.description
+        db, redis, subcategory_id, body.is_active, body.name, body.description, body.keywords
     )

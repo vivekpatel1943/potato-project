@@ -10,9 +10,11 @@ import StepDocuments from "../components/StepDocuments";
 import StepServices from "../components/StepServices";
 import StepProofs from "../components/StepProofs";
 import StepReview from "../components/StepReview";
+import { StepHomeBase } from "../components/StepHomeBase";
 
 const STEPS = [
   "Phone Verification",
+  "Set Home Base",
   "Profile Picture",
   "Identity Documents",
   "Services",
@@ -33,6 +35,8 @@ export default function WorkerOnboardingPage() {
   const [isLoadingDraft, setIsLoadingDraft] = useState(true);
 
   // Form data accumulated across steps
+  const [homeBaseLat, setHomeBaseLat] = useState<number | undefined>(undefined);
+  const [homeBaseLng, setHomeBaseLng] = useState<number | undefined>(undefined);
   const [avatarUrl, setAvatarUrl] = useState("");
   const [documents, setDocuments] = useState<DocumentData[]>([]);
   const [subcategoryIds, setSubcategoryIds] = useState<string[]>([]);
@@ -55,6 +59,8 @@ export default function WorkerOnboardingPage() {
         } else {
           const { data } = await api.get("/workers/onboarding/draft");
           setCurrentStep(data.current_step);
+          setHomeBaseLat(data.draft_data.home_base_lat);
+          setHomeBaseLng(data.draft_data.home_base_lng);
           setAvatarUrl(data.draft_data.avatar_url || "");
           setDocuments(data.draft_data.documents || []);
           setSubcategoryIds(data.draft_data.subcategory_ids || []);
@@ -71,8 +77,10 @@ export default function WorkerOnboardingPage() {
 
   // ── Save draft helper (best-effort, non-blocking) ──────────────
   const saveDraft = useCallback(
-    async (step: number, overrides?: { avatar_url?: string; documents?: DocumentData[]; subcategory_ids?: string[]; proofs?: ProofData[] }) => {
+    async (step: number, overrides?: { home_base_lat?: number; home_base_lng?: number; avatar_url?: string; documents?: DocumentData[]; subcategory_ids?: string[]; proofs?: ProofData[] }) => {
       const draftData = {
+        home_base_lat: overrides?.home_base_lat ?? homeBaseLat,
+        home_base_lng: overrides?.home_base_lng ?? homeBaseLng,
         avatar_url: overrides?.avatar_url ?? avatarUrl,
         documents: overrides?.documents ?? documents,
         subcategory_ids: overrides?.subcategory_ids ?? subcategoryIds,
@@ -87,7 +95,7 @@ export default function WorkerOnboardingPage() {
         // Draft save is best-effort; don't block the user
       }
     },
-    [avatarUrl, documents, subcategoryIds, proofs]
+    [homeBaseLat, homeBaseLng, avatarUrl, documents, subcategoryIds, proofs]
   );
 
   const goNext = () => setCurrentStep((s) => Math.min(s + 1, STEPS.length - 1));
@@ -112,6 +120,8 @@ export default function WorkerOnboardingPage() {
 
       const payload = {
         avatar_url: avatarUrl,
+        home_base_lat: homeBaseLat,
+        home_base_lng: homeBaseLng,
         verification_documents: documents.map((d) => ({
           document_type: d.document_type,
           document_url: d.document_url,
@@ -220,35 +230,44 @@ export default function WorkerOnboardingPage() {
           <StepPhoneVerify onNext={() => { saveDraft(1); goNext(); }} />
         )}
         {currentStep === 1 && (
-          <StepAvatar
-            avatarUrl={avatarUrl}
-            onNext={(url) => { setAvatarUrl(url); saveDraft(2, { avatar_url: url }); goNext(); }}
+          <StepHomeBase 
+            initialLat={homeBaseLat}
+            initialLng={homeBaseLng}
+            onLocationFound={(lat, lng) => setHomeBaseLat(lat) || setHomeBaseLng(lng)}
+            onNext={() => { saveDraft(2, { home_base_lat: homeBaseLat, home_base_lng: homeBaseLng }); goNext(); }}
             onBack={goBack}
           />
         )}
         {currentStep === 2 && (
-          <StepDocuments
-            documents={documents}
-            onNext={(docs) => { setDocuments(docs); saveDraft(3, { documents: docs }); goNext(); }}
+          <StepAvatar
+            avatarUrl={avatarUrl}
+            onNext={(url) => { setAvatarUrl(url); saveDraft(3, { avatar_url: url }); goNext(); }}
             onBack={goBack}
           />
         )}
         {currentStep === 3 && (
-          <StepServices
-            selectedIds={subcategoryIds}
-            onNext={(ids) => { setSubcategoryIds(ids); saveDraft(4, { subcategory_ids: ids }); goNext(); }}
+          <StepDocuments
+            documents={documents}
+            onNext={(docs) => { setDocuments(docs); saveDraft(4, { documents: docs }); goNext(); }}
             onBack={goBack}
           />
         )}
         {currentStep === 4 && (
-          <StepProofs
-            subcategoryIds={subcategoryIds}
-            proofs={proofs}
-            onNext={(newProofs) => { setProofs(newProofs); saveDraft(5, { proofs: newProofs }); goNext(); }}
+          <StepServices
+            selectedIds={subcategoryIds}
+            onNext={(ids) => { setSubcategoryIds(ids); saveDraft(5, { subcategory_ids: ids }); goNext(); }}
             onBack={goBack}
           />
         )}
         {currentStep === 5 && (
+          <StepProofs
+            subcategoryIds={subcategoryIds}
+            proofs={proofs}
+            onNext={(newProofs) => { setProofs(newProofs); saveDraft(6, { proofs: newProofs }); goNext(); }}
+            onBack={goBack}
+          />
+        )}
+        {currentStep === 6 && (
           <StepReview
             avatarUrl={avatarUrl}
             documents={documents}

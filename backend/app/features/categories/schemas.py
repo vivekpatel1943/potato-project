@@ -6,6 +6,7 @@ class SubcategoryOut(BaseModel):
     id: uuid.UUID
     name: str
     description: str | None = None
+    keywords: list[str] = []
 
     model_config = {"from_attributes": True}
 

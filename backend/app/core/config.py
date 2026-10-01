@@ -41,7 +41,7 @@ class Settings(BaseSettings):
     phone_rate_limit_seconds: int = 60
 
     # CORS
-    cors_origins: str = "http://localhost:5173"  # comma-separated for multiple
+    cors_origins: str = "http://localhost:5173,http://192.168.1.19:5173,http://192.168.1.24:5173"  # comma-separated for multiple
 
     # Phone verification (WhatsApp)
     whatsapp_verify_number: str = "918103614609"

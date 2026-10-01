@@ -1,174 +1,1435 @@
 {
-  "HOME & HOUSEHOLD": [
-    "General Cleaning",
-    "Deep Cleaning",
-    "Kitchen Cleaning",
-    "Bathroom Cleaning",
-    "Laundry",
-    "Ironing",
-    "Dishwashing",
-    "Home Organization",
-    "Furniture Assembly",
-    "Furniture Moving",
-    "Packing / Unpacking",
-    "Household Assistance"
-  ],
-  "COOKING & FOOD": [
-    "General Cooking",
-    "Indian Cooking",
-    "North Indian Cooking",
-    "South Indian Cooking",
-    "Bengali Cooking",
-    "Gujarati Cooking",
-    "Marathi Cooking",
-    "Punjabi Cooking",
-    "Rajasthani Cooking",
-    "Biryani",
-    "Baking",
-    "Desserts",
-    "Meal Preparation",
-    "Vegetarian Cooking",
-    "Non-Vegetarian Cooking"
-  ],
-  "VEHICLES": [
-    "Motorcycle Repair",
-    "Scooter Repair",
-    "Bicycle Repair",
-    "Car Repair",
-    "Car Washing",
-    "Bike Washing",
-    "Vehicle Cleaning",
-    "Tire / Puncture Repair",
-    "Battery / Jump Start",
-    "Oil Change",
-    "Basic Vehicle Inspection"
-  ],
-  "ELECTRICAL & APPLIANCES": [
-    "Basic Electrical Work",
-    "Light / Bulb Installation",
-    "Fan Installation",
-    "Switch / Socket Repair",
-    "Wiring Assistance",
-    "Appliance Installation",
-    "Appliance Troubleshooting",
-    "AC Cleaning",
-    "AC Installation Assistance",
-    "Inverter / UPS Assistance"
-  ],
-  "PLUMBING": [
-    "Tap / Faucet Repair",
-    "Sink Repair",
-    "Toilet Repair",
-    "Drain Cleaning",
-    "Pipe Repair",
-    "Water Leakage Repair",
-    "Shower Installation",
-    "Basic Plumbing"
-  ],
-  "HOME REPAIR & MAINTENANCE": [
-    "Carpentry",
-    "Painting",
-    "Wall Mounting",
-    "Drilling",
-    "Tile Repair",
-    "Masonry",
-    "Door Repair",
-    "Window Repair",
-    "Lock Installation",
-    "Curtain / Rod Installation",
-    "General Handyman"
-  ],
-  "MOVING & PHYSICAL HELP": [
-    "Lifting / Carrying",
-    "Furniture Moving",
-    "House Shifting Assistance",
-    "Loading / Unloading",
-    "Packing",
-    "Delivery Assistance",
-    "Warehouse Assistance",
-    "Event Setup / Teardown"
-  ],
-  "ERRANDS & DELIVERY": [
-    "Grocery Pickup",
-    "Medicine Pickup",
-    "Parcel Pickup",
-    "Document Delivery",
-    "Shopping Assistance",
-    "Queue Standing",
-    "Local Errands",
-    "Personal Assistance"
-  ],
-  "PET CARE": [
-    "Dog Walking",
-    "Pet Sitting",
-    "Pet Feeding",
-    "Pet Grooming Assistance",
-    "Pet Transportation"
-  ],
-  "GARDENING & OUTDOOR": [
-    "Gardening",
-    "Lawn Maintenance",
-    "Plant Care",
-    "Plant Watering",
-    "Pruning",
-    "Potting / Repotting",
-    "Garden Cleanup"
-  ],
-  "TECH & COMPUTER HELP": [
-    "Computer Troubleshooting",
-    "Laptop Troubleshooting",
-    "Phone Troubleshooting",
-    "Software Installation",
-    "Wi-Fi / Router Setup",
-    "Printer Setup",
-    "Smart TV Setup",
-    "Data Transfer",
-    "Device Setup",
-    "Basic Technical Support"
-  ],
-  "EDUCATION & TUTORING": [
-    "School Tutoring",
-    "Mathematics",
-    "Physics",
-    "Chemistry",
-    "Biology",
-    "English",
-    "Computer Science",
-    "Language Tutoring",
-    "Exam Preparation",
-    "Homework Assistance"
-  ],
-  "PERSONAL & LIFESTYLE": [
-    "Personal Shopping",
-    "Event Assistance",
-    "Party Assistance",
-    "Photography Assistance",
-    "Videography Assistance",
-    "Fitness Assistance",
-    "Sports Coaching",
-    "General Personal Assistance"
-  ],
-  "EVENTS": [
-    "Event Setup",
-    "Event Cleanup",
-    "Serving Food",
-    "Guest Assistance",
-    "Decoration Assistance",
-    "Photography",
-    "Videography",
-    "Sound / Equipment Assistance",
-    "Event Logistics"
-  ],
-  "SPORTS & RECREATION": [
-    "Cricket",
-    "Football",
-    "Basketball",
-    "Badminton",
-    "Tennis",
-    "Table Tennis",
-    "Volleyball",
-    "Running Partner",
-    "Gym Partner",
-    "Sports Coaching"
-  ]
+  "HOME & HOUSEHOLD": {
+    "General Cleaning": [
+      "cleaning",
+      "house cleaning",
+      "home cleaning",
+      "clean house",
+      "clean my house",
+      "cleaning help",
+      "house cleaner",
+      "home cleaner",
+      "safai",
+      "ghar ki safai",
+      "ghar saaf karna"
+    ],
+    "Deep Cleaning": [
+      "deep cleaning",
+      "deep clean",
+      "full house cleaning",
+      "complete house cleaning",
+      "thorough cleaning",
+      "deep house clean",
+      "full cleaning",
+      "intensive cleaning",
+      "deep safai",
+      "poori safai"
+    ],
+    "Kitchen Cleaning": [
+      "kitchen cleaning",
+      "clean kitchen",
+      "kitchen clean",
+      "kitchen safai",
+      "clean my kitchen",
+      "kitchen cleaner",
+      "kitchen cleanup",
+      "kitchen deep cleaning"
+    ],
+    "Bathroom Cleaning": [
+      "bathroom cleaning",
+      "clean bathroom",
+      "bathroom clean",
+      "bathroom safai",
+      "toilet cleaning",
+      "washroom cleaning",
+      "clean washroom",
+      "bathroom cleanup"
+    ],
+    "Laundry": [
+      "laundry",
+      "wash clothes",
+      "washing clothes",
+      "clothes washing",
+      "clothes wash",
+      "dhulai",
+      "kapde dhona",
+      "wash my clothes",
+      "laundry help"
+    ],
+    "Ironing": [
+      "ironing",
+      "iron clothes",
+      "clothes ironing",
+      "press clothes",
+      "pressing clothes",
+      "kapde press",
+      "kapde iron",
+      "press my clothes"
+    ],
+    "Dishwashing": [
+      "dishwashing",
+      "wash dishes",
+      "washing dishes",
+      "clean dishes",
+      "utensil cleaning",
+      "bartan dhona",
+      "bartan saaf karna",
+      "wash utensils",
+      "bartan washing"
+    ],
+    "Home Organization": [
+      "home organization",
+      "organize house",
+      "organize home",
+      "declutter",
+      "decluttering",
+      "organize room",
+      "room organization",
+      "arrange house",
+      "ghar arrange karna"
+    ],
+    "Furniture Assembly": [
+      "furniture assembly",
+      "assemble furniture",
+      "assemble bed",
+      "assemble table",
+      "assemble chair",
+      "furniture setup",
+      "ikea assembly",
+      "put furniture together",
+      "furniture fitting"
+    ],
+    "Furniture Moving": [
+      "move furniture",
+      "furniture moving",
+      "shift furniture",
+      "move sofa",
+      "move bed",
+      "move cupboard",
+      "move table",
+      "heavy furniture",
+      "furniture shifting"
+    ],
+    "Packing / Unpacking": [
+      "packing",
+      "unpacking",
+      "pack things",
+      "pack my stuff",
+      "packing help",
+      "unpacking help",
+      "house packing",
+      "pack boxes",
+      "unpack boxes"
+    ],
+    "Household Assistance": [
+      "household help",
+      "house help",
+      "home help",
+      "domestic help",
+      "household assistance",
+      "home assistance",
+      "ghar ka kaam",
+      "ghar kaam help",
+      "general house help"
+    ]
+  },
+
+  "COOKING & FOOD": {
+    "General Cooking": [
+      "cooking",
+      "cook",
+      "home cook",
+      "cook food",
+      "make food",
+      "food preparation",
+      "cooking help",
+      "cook at home",
+      "ghar ka khana",
+      "khana banana",
+      "khana banwana"
+    ],
+    "Indian Cooking": [
+      "indian cooking",
+      "indian food",
+      "indian cook",
+      "indian cuisine",
+      "desi food",
+      "desi cooking",
+      "indian dishes",
+      "ghar ka indian khana",
+      "desi khana"
+    ],
+    "North Indian Cooking": [
+      "north indian cooking",
+      "north indian food",
+      "north indian cook",
+      "punjabi food",
+      "roti sabzi",
+      "dal roti",
+      "north indian cuisine",
+      "north indian dishes"
+    ],
+    "South Indian Cooking": [
+      "south indian cooking",
+      "south indian food",
+      "south indian cook",
+      "south indian cuisine",
+      "dosa",
+      "idli",
+      "sambar",
+      "rasam",
+      "south indian dishes"
+    ],
+    "Bengali Cooking": [
+      "bengali cooking",
+      "bengali food",
+      "bengali cook",
+      "bangla food",
+      "bengali cuisine",
+      "bengali dishes",
+      "macher jhol",
+      "bengali khana"
+    ],
+    "Gujarati Cooking": [
+      "gujarati cooking",
+      "gujarati food",
+      "gujarati cook",
+      "gujarati cuisine",
+      "gujarati dishes",
+      "dhokla",
+      "thepla",
+      "gujarati khana"
+    ],
+    "Marathi Cooking": [
+      "marathi cooking",
+      "marathi food",
+      "marathi cook",
+      "maharashtrian food",
+      "maharashtrian cooking",
+      "marathi cuisine",
+      "marathi dishes"
+    ],
+    "Punjabi Cooking": [
+      "punjabi cooking",
+      "punjabi food",
+      "punjabi cook",
+      "punjabi cuisine",
+      "punjabi dishes",
+      "butter chicken",
+      "chole",
+      "paratha"
+    ],
+    "Rajasthani Cooking": [
+      "rajasthani cooking",
+      "rajasthani food",
+      "rajasthani cook",
+      "rajasthani cuisine",
+      "rajasthani dishes",
+      "dal bati",
+      "dal baati churma",
+      "rajasthani khana"
+    ],
+    "Biryani": [
+      "biryani",
+      "biriyani",
+      "biriyani cooking",
+      "make biryani",
+      "cook biryani",
+      "chicken biryani",
+      "mutton biryani",
+      "veg biryani",
+      "biryani cook",
+      "biryani banana"
+    ],
+    "Baking": [
+      "baking",
+      "baker",
+      "bake",
+      "cake",
+      "cakes",
+      "bread",
+      "cookies",
+      "biscuits",
+      "pastry",
+      "bake a cake"
+    ],
+    "Desserts": [
+      "dessert",
+      "desserts",
+      "sweet",
+      "sweets",
+      "mithai",
+      "kheer",
+      "halwa",
+      "gulab jamun",
+      "rasgulla",
+      "rasmalai",
+      "barfi",
+      "ladoo",
+      "jalebi",
+      "dessert cooking"
+    ],
+    "Meal Preparation": [
+      "meal preparation",
+      "meal prep",
+      "meal prep help",
+      "prepare meals",
+      "prepare food",
+      "weekly meals",
+      "food prep",
+      "meal cooking",
+      "meals for the week",
+      "meal preparation help"
+    ],
+    "Vegetarian Cooking": [
+      "vegetarian cooking",
+      "veg cooking",
+      "veg food",
+      "vegetarian food",
+      "veg cook",
+      "vegetarian cook",
+      "pure veg",
+      "vegetarian meals",
+      "veg khana"
+    ],
+    "Non-Vegetarian Cooking": [
+      "non veg cooking",
+      "non vegetarian cooking",
+      "nonveg cooking",
+      "non veg food",
+      "chicken cooking",
+      "mutton cooking",
+      "fish cooking",
+      "meat cooking",
+      "non veg cook"
+    ]
+  },
+
+  "VEHICLES": {
+    "Motorcycle Repair": [
+      "bike repair",
+      "motorcycle repair",
+      "motorbike repair",
+      "bike mechanic",
+      "motorcycle mechanic",
+      "bike service",
+      "bike fixing",
+      "repair my bike",
+      "bike problem",
+      "bike kharab"
+    ],
+    "Scooter Repair": [
+      "scooter repair",
+      "scooty repair",
+      "scooter mechanic",
+      "scooty mechanic",
+      "scooter service",
+      "scooty service",
+      "fix scooter",
+      "scooter problem",
+      "scooty problem"
+    ],
+    "Bicycle Repair": [
+      "cycle repair",
+      "bicycle repair",
+      "cycle mechanic",
+      "bicycle mechanic",
+      "cycle puncture",
+      "cycle service",
+      "fix cycle",
+      "cycle problem"
+    ],
+    "Car Repair": [
+      "car repair",
+      "car mechanic",
+      "car service",
+      "fix car",
+      "car fixing",
+      "car problem",
+      "car maintenance",
+      "car kharab",
+      "mechanic for car"
+    ],
+    "Car Washing": [
+      "car wash",
+      "car washing",
+      "wash car",
+      "clean car",
+      "car cleaning",
+      "car wash at home",
+      "car cleaner",
+      "car dhulai"
+    ],
+    "Bike Washing": [
+      "bike wash",
+      "bike washing",
+      "wash bike",
+      "clean bike",
+      "bike cleaning",
+      "bike wash at home",
+      "bike dhulai"
+    ],
+    "Vehicle Cleaning": [
+      "vehicle cleaning",
+      "vehicle wash",
+      "vehicle washing",
+      "clean vehicle",
+      "auto cleaning",
+      "vehicle detailing",
+      "car and bike cleaning"
+    ],
+    "Tire / Puncture Repair": [
+      "puncture repair",
+      "puncture",
+      "tyre puncture",
+      "tire puncture",
+      "puncture wala",
+      "flat tyre",
+      "flat tire",
+      "tyre repair",
+      "tire repair",
+      "puncture fixing"
+    ],
+    "Battery / Jump Start": [
+      "battery problem",
+      "car battery",
+      "bike battery",
+      "jump start",
+      "jumpstart",
+      "dead battery",
+      "battery dead",
+      "battery jump",
+      "vehicle won't start"
+    ],
+    "Oil Change": [
+      "oil change",
+      "engine oil",
+      "change engine oil",
+      "oil replacement",
+      "bike oil change",
+      "car oil change",
+      "oil service"
+    ],
+    "Basic Vehicle Inspection": [
+      "vehicle inspection",
+      "car inspection",
+      "bike inspection",
+      "vehicle check",
+      "car checkup",
+      "bike checkup",
+      "vehicle diagnosis",
+      "car check",
+      "bike check"
+    ]
+  },
+
+  "ELECTRICAL & APPLIANCES": {
+    "Basic Electrical Work": [
+      "electrician",
+      "electrical work",
+      "electric work",
+      "electrical repair",
+      "electric repair",
+      "electrician help",
+      "electric problem",
+      "bijli ka kaam",
+      "electrician ghar par"
+    ],
+    "Light / Bulb Installation": [
+      "bulb installation",
+      "light installation",
+      "install light",
+      "install bulb",
+      "change bulb",
+      "light fitting",
+      "bulb fitting",
+      "ceiling light installation"
+    ],
+    "Fan Installation": [
+      "fan installation",
+      "install fan",
+      "ceiling fan installation",
+      "fan fitting",
+      "fan repair",
+      "fan setup",
+      "pankha lagana"
+    ],
+    "Switch / Socket Repair": [
+      "switch repair",
+      "socket repair",
+      "switch installation",
+      "socket installation",
+      "electrical socket",
+      "switch problem",
+      "socket problem",
+      "switch board repair"
+    ],
+    "Wiring Assistance": [
+      "wiring",
+      "electrical wiring",
+      "house wiring",
+      "wiring repair",
+      "wire repair",
+      "electric wiring",
+      "wiring help",
+      "bijli wiring"
+    ],
+    "Appliance Installation": [
+      "appliance installation",
+      "install appliance",
+      "appliance setup",
+      "washing machine installation",
+      "fridge installation",
+      "microwave installation",
+      "appliance fitting"
+    ],
+    "Appliance Troubleshooting": [
+      "appliance repair",
+      "appliance troubleshooting",
+      "appliance problem",
+      "fix appliance",
+      "home appliance repair",
+      "washing machine repair",
+      "fridge repair",
+      "microwave repair"
+    ],
+    "AC Cleaning": [
+      "ac cleaning",
+      "air conditioner cleaning",
+      "ac service",
+      "ac servicing",
+      "ac wash",
+      "clean ac",
+      "air conditioner service",
+      "ac safai"
+    ],
+    "AC Installation Assistance": [
+      "ac installation",
+      "install ac",
+      "air conditioner installation",
+      "ac fitting",
+      "air conditioner fitting",
+      "ac setup"
+    ],
+    "Inverter / UPS Assistance": [
+      "inverter",
+      "inverter repair",
+      "inverter installation",
+      "ups repair",
+      "ups installation",
+      "inverter problem",
+      "battery inverter",
+      "ups problem"
+    ]
+  },
+
+  "PLUMBING": {
+    "Tap / Faucet Repair": [
+      "tap repair",
+      "faucet repair",
+      "tap leaking",
+      "leaking tap",
+      "tap replacement",
+      "faucet replacement",
+      "tap installation",
+      "nal repair",
+      "nal leak"
+    ],
+    "Sink Repair": [
+      "sink repair",
+      "sink installation",
+      "sink leaking",
+      "kitchen sink repair",
+      "wash basin repair",
+      "basin repair",
+      "sink blockage"
+    ],
+    "Toilet Repair": [
+      "toilet repair",
+      "toilet fixing",
+      "toilet problem",
+      "toilet leak",
+      "flush repair",
+      "flush problem",
+      "commode repair",
+      "toilet plumber"
+    ],
+    "Drain Cleaning": [
+      "drain cleaning",
+      "drain blockage",
+      "blocked drain",
+      "drain unclogging",
+      "unclog drain",
+      "drain repair",
+      "pipe blockage",
+      "nali safai"
+    ],
+    "Pipe Repair": [
+      "pipe repair",
+      "water pipe repair",
+      "pipe leakage",
+      "pipe leak",
+      "broken pipe",
+      "plumbing pipe",
+      "pipe replacement"
+    ],
+    "Water Leakage Repair": [
+      "water leakage",
+      "water leak",
+      "leak repair",
+      "leaking pipe",
+      "leaking tap",
+      "ceiling water leak",
+      "wall leakage",
+      "plumber for leak"
+    ],
+    "Shower Installation": [
+      "shower installation",
+      "install shower",
+      "shower fitting",
+      "shower repair",
+      "bathroom shower",
+      "shower setup"
+    ],
+    "Basic Plumbing": [
+      "plumber",
+      "plumbing",
+      "plumbing work",
+      "plumbing repair",
+      "plumber needed",
+      "plumbing help",
+      "plumbing problem",
+      "nal ka kaam"
+    ]
+  },
+
+  "HOME REPAIR & MAINTENANCE": {
+    "Carpentry": [
+      "carpenter",
+      "carpentry",
+      "woodwork",
+      "wood work",
+      "wood repair",
+      "furniture repair",
+      "carpenter work",
+      "badhai",
+      "lakdi ka kaam"
+    ],
+    "Painting": [
+      "painting",
+      "paint house",
+      "house painting",
+      "wall painting",
+      "room painting",
+      "painter",
+      "paint my house",
+      "painting work"
+    ],
+    "Wall Mounting": [
+      "wall mounting",
+      "mount on wall",
+      "wall mount",
+      "tv mounting",
+      "mount tv",
+      "wall mounting service",
+      "wall fitting"
+    ],
+    "Drilling": [
+      "drilling",
+      "drill wall",
+      "wall drilling",
+      "drill holes",
+      "hole drilling",
+      "drilling work",
+      "drill into wall"
+    ],
+    "Tile Repair": [
+      "tile repair",
+      "tile fixing",
+      "broken tile",
+      "replace tile",
+      "floor tile repair",
+      "bathroom tile repair",
+      "tile work"
+    ],
+    "Masonry": [
+      "masonry",
+      "mason",
+      "brick work",
+      "brickwork",
+      "cement work",
+      "construction work",
+      "wall construction",
+      "raj mistri",
+      "mistri"
+    ],
+    "Door Repair": [
+      "door repair",
+      "door fixing",
+      "door problem",
+      "door installation",
+      "door fitting",
+      "door hinge repair",
+      "door lock repair"
+    ],
+    "Window Repair": [
+      "window repair",
+      "window fixing",
+      "window installation",
+      "window fitting",
+      "window problem",
+      "window glass repair"
+    ],
+    "Lock Installation": [
+      "lock installation",
+      "install lock",
+      "lock fitting",
+      "door lock installation",
+      "new lock",
+      "lock replacement",
+      "lock repair"
+    ],
+    "Curtain / Rod Installation": [
+      "curtain installation",
+      "curtain rod installation",
+      "install curtain rod",
+      "curtain fitting",
+      "rod fitting",
+      "curtain hanging",
+      "curtain setup"
+    ],
+    "General Handyman": [
+      "handyman",
+      "handyman help",
+      "general repair",
+      "home repair",
+      "odd jobs",
+      "fix things",
+      "home maintenance",
+      "general maintenance",
+      "ghar ki repair"
+    ]
+  },
+
+  "MOVING & PHYSICAL HELP": {
+    "Lifting / Carrying": [
+      "lifting",
+      "carrying",
+      "heavy lifting",
+      "lift heavy things",
+      "carry heavy items",
+      "lifting help",
+      "physical help",
+      "heavy work"
+    ],
+    "Furniture Moving": [
+      "move furniture",
+      "furniture shifting",
+      "shift furniture",
+      "move sofa",
+      "move bed",
+      "move cupboard",
+      "furniture moving"
+    ],
+    "House Shifting Assistance": [
+      "house shifting",
+      "home shifting",
+      "shift house",
+      "moving house",
+      "house move",
+      "moving assistance",
+      "ghar shifting",
+      "ghar badalna"
+    ],
+    "Loading / Unloading": [
+      "loading",
+      "unloading",
+      "load items",
+      "unload items",
+      "loading unloading",
+      "loading help",
+      "unloading help",
+      "truck loading"
+    ],
+    "Packing": [
+      "packing",
+      "pack items",
+      "packing help",
+      "box packing",
+      "house packing",
+      "moving packing",
+      "pack सामान",
+      "pack सामान"
+    ],
+    "Delivery Assistance": [
+      "delivery help",
+      "delivery assistance",
+      "help with delivery",
+      "delivery person",
+      "deliver items",
+      "local delivery",
+      "delivery work"
+    ],
+    "Warehouse Assistance": [
+      "warehouse work",
+      "warehouse helper",
+      "warehouse assistance",
+      "warehouse loading",
+      "warehouse unloading",
+      "godown work",
+      "godown helper"
+    ],
+    "Event Setup / Teardown": [
+      "event setup",
+      "event teardown",
+      "event setup help",
+      "event dismantling",
+      "event packing",
+      "event cleanup",
+      "setup event",
+      "take down event"
+    ]
+  },
+
+  "ERRANDS & DELIVERY": {
+    "Grocery Pickup": [
+      "grocery pickup",
+      "pick up groceries",
+      "grocery delivery",
+      "get groceries",
+      "buy groceries",
+      "grocery shopping",
+      "kirana pickup",
+      "kirana shopping",
+      "sabzi lana"
+    ],
+    "Medicine Pickup": [
+      "medicine pickup",
+      "pick up medicine",
+      "medicine delivery",
+      "get medicines",
+      "buy medicine",
+      "pharmacy pickup",
+      "dawai lana",
+      "dawai pickup"
+    ],
+    "Parcel Pickup": [
+      "parcel pickup",
+      "pick up parcel",
+      "parcel collection",
+      "collect parcel",
+      "package pickup",
+      "package collection",
+      "courier pickup"
+    ],
+    "Document Delivery": [
+      "document delivery",
+      "deliver documents",
+      "document pickup",
+      "documents pickup",
+      "paper delivery",
+      "papers delivery",
+      "deliver papers"
+    ],
+    "Shopping Assistance": [
+      "shopping assistance",
+      "shopping help",
+      "personal shopping",
+      "help shopping",
+      "shop for me",
+      "buy something for me",
+      "shopping assistant"
+    ],
+    "Queue Standing": [
+      "queue standing",
+      "stand in line",
+      "wait in queue",
+      "queue helper",
+      "line standing",
+      "stand in line for me",
+      "line waiting"
+    ],
+    "Local Errands": [
+      "errands",
+      "local errands",
+      "small errands",
+      "run errands",
+      "errand help",
+      "odd errands",
+      "kaam karwana",
+      "chota kaam"
+    ],
+    "Personal Assistance": [
+      "personal assistant",
+      "personal assistance",
+      "personal help",
+      "help me with errands",
+      "assistant",
+      "general assistance",
+      "help with tasks"
+    ]
+  },
+
+  "PET CARE": {
+    "Dog Walking": [
+      "dog walking",
+      "walk my dog",
+      "dog walker",
+      "take dog for walk",
+      "dog walk",
+      "walk pet",
+      "kutte ko walk"
+    ],
+    "Pet Sitting": [
+      "pet sitting",
+      "pet sitter",
+      "watch my pet",
+      "look after pet",
+      "pet care",
+      "take care of pet",
+      "dog sitting",
+      "cat sitting"
+    ],
+    "Pet Feeding": [
+      "pet feeding",
+      "feed my pet",
+      "feed dog",
+      "feed cat",
+      "pet food",
+      "dog feeding",
+      "cat feeding"
+    ],
+    "Pet Grooming Assistance": [
+      "pet grooming",
+      "dog grooming",
+      "cat grooming",
+      "pet bath",
+      "dog bath",
+      "pet grooming help",
+      "groom my pet"
+    ],
+    "Pet Transportation": [
+      "pet transportation",
+      "pet transport",
+      "transport pet",
+      "pet travel",
+      "take pet somewhere",
+      "dog transport",
+      "cat transport"
+    ]
+  },
+
+  "GARDENING & OUTDOOR": {
+    "Gardening": [
+      "gardening",
+      "gardener",
+      "garden work",
+      "garden help",
+      "gardening help",
+      "gardening service",
+      "bagwani",
+      "bagiche ka kaam"
+    ],
+    "Lawn Maintenance": [
+      "lawn maintenance",
+      "lawn care",
+      "grass cutting",
+      "grass trimming",
+      "lawn mowing",
+      "cut grass",
+      "lawn cleanup"
+    ],
+    "Plant Care": [
+      "plant care",
+      "take care of plants",
+      "plant maintenance",
+      "plants help",
+      "care for plants",
+      "garden plant care",
+      "paudhe ki care"
+    ],
+    "Plant Watering": [
+      "plant watering",
+      "water plants",
+      "water my plants",
+      "watering plants",
+      "garden watering",
+      "paudhe ko pani"
+    ],
+    "Pruning": [
+      "pruning",
+      "trim plants",
+      "trim trees",
+      "plant trimming",
+      "tree trimming",
+      "cut branches",
+      "branch cutting"
+    ],
+    "Potting / Repotting": [
+      "potting",
+      "repotting",
+      "repot plants",
+      "plant repotting",
+      "change plant pot",
+      "pot plant",
+      "plant transfer"
+    ],
+    "Garden Cleanup": [
+      "garden cleanup",
+      "garden cleaning",
+      "clean garden",
+      "garden waste cleanup",
+      "leaves cleanup",
+      "garden safai",
+      "outdoor cleanup"
+    ]
+  },
+
+  "TECH & COMPUTER HELP": {
+    "Computer Troubleshooting": [
+      "computer repair",
+      "computer troubleshooting",
+      "computer problem",
+      "fix computer",
+      "pc repair",
+      "desktop repair",
+      "computer technician",
+      "computer not working"
+    ],
+    "Laptop Troubleshooting": [
+      "laptop repair",
+      "laptop troubleshooting",
+      "laptop problem",
+      "fix laptop",
+      "laptop technician",
+      "laptop not working",
+      "laptop service"
+    ],
+    "Phone Troubleshooting": [
+      "phone repair",
+      "mobile repair",
+      "phone problem",
+      "mobile problem",
+      "fix phone",
+      "smartphone repair",
+      "phone troubleshooting",
+      "mobile technician"
+    ],
+    "Software Installation": [
+      "software installation",
+      "install software",
+      "install program",
+      "software setup",
+      "application installation",
+      "install app",
+      "program installation"
+    ],
+    "Wi-Fi / Router Setup": [
+      "wifi setup",
+      "wi-fi setup",
+      "router setup",
+      "wifi installation",
+      "internet setup",
+      "router installation",
+      "wifi problem",
+      "internet problem",
+      "wifi technician"
+    ],
+    "Printer Setup": [
+      "printer setup",
+      "printer installation",
+      "install printer",
+      "printer problem",
+      "printer repair",
+      "printer technician",
+      "printer configuration"
+    ],
+    "Smart TV Setup": [
+      "smart tv setup",
+      "tv setup",
+      "smart tv installation",
+      "install smart tv",
+      "tv installation",
+      "tv configuration",
+      "tv technician"
+    ],
+    "Data Transfer": [
+      "data transfer",
+      "transfer data",
+      "move data",
+      "phone data transfer",
+      "copy files",
+      "transfer files",
+      "backup data",
+      "data migration"
+    ],
+    "Device Setup": [
+      "device setup",
+      "setup device",
+      "new phone setup",
+      "computer setup",
+      "laptop setup",
+      "device installation",
+      "gadget setup"
+    ],
+    "Basic Technical Support": [
+      "technical support",
+      "tech support",
+      "computer help",
+      "technical help",
+      "IT help",
+      "tech assistance",
+      "computer assistance",
+      "IT support"
+    ]
+  },
+
+  "EDUCATION & TUTORING": {
+    "School Tutoring": [
+      "school tutor",
+      "school tutoring",
+      "home tutor",
+      "home tuition",
+      "tuition",
+      "tutor",
+      "school teacher",
+      "private tutor",
+      "padhai help"
+    ],
+    "Mathematics": [
+      "math",
+      "maths",
+      "mathematics",
+      "math tutor",
+      "maths tutor",
+      "math tuition",
+      "mathematics tutor",
+      "algebra",
+      "geometry"
+    ],
+    "Physics": [
+      "physics",
+      "physics tutor",
+      "physics tuition",
+      "physics teacher",
+      "physics coaching",
+      "physics help"
+    ],
+    "Chemistry": [
+      "chemistry",
+      "chemistry tutor",
+      "chemistry tuition",
+      "chemistry teacher",
+      "chemistry coaching",
+      "chemistry help"
+    ],
+    "Biology": [
+      "biology",
+      "biology tutor",
+      "biology tuition",
+      "biology teacher",
+      "biology coaching",
+      "bio tutor"
+    ],
+    "English": [
+      "english tutor",
+      "english tuition",
+      "english teacher",
+      "learn english",
+      "spoken english",
+      "english speaking",
+      "english grammar",
+      "english coaching"
+    ],
+    "Computer Science": [
+      "computer science tutor",
+      "computer tuition",
+      "coding tutor",
+      "programming tutor",
+      "computer teacher",
+      "coding teacher",
+      "computer science",
+      "programming help"
+    ],
+    "Language Tutoring": [
+      "language tutor",
+      "language teacher",
+      "language lessons",
+      "learn language",
+      "spoken language",
+      "language classes",
+      "language coaching"
+    ],
+    "Exam Preparation": [
+      "exam preparation",
+      "exam prep",
+      "exam coaching",
+      "competitive exam",
+      "test preparation",
+      "entrance exam",
+      "exam tutor",
+      "exam help"
+    ],
+    "Homework Assistance": [
+      "homework help",
+      "homework assistance",
+      "help with homework",
+      "assignment help",
+      "school work help",
+      "study help",
+      "homework tutor"
+    ]
+  },
+
+  "PERSONAL & LIFESTYLE": {
+    "Personal Shopping": [
+      "personal shopping",
+      "shop for me",
+      "shopping assistant",
+      "personal shopper",
+      "buy for me",
+      "shopping help",
+      "shopping assistance"
+    ],
+    "Event Assistance": [
+      "event help",
+      "event assistance",
+      "event helper",
+      "event staff",
+      "event support",
+      "help at event"
+    ],
+    "Party Assistance": [
+      "party help",
+      "party assistance",
+      "party helper",
+      "party staff",
+      "party setup",
+      "help with party"
+    ],
+    "Photography Assistance": [
+      "photography",
+      "photographer",
+      "photo shoot",
+      "take photos",
+      "photography help",
+      "photo assistance",
+      "photoshoot"
+    ],
+    "Videography Assistance": [
+      "videography",
+      "videographer",
+      "video shoot",
+      "video recording",
+      "shoot video",
+      "videography help",
+      "video assistance"
+    ],
+    "Fitness Assistance": [
+      "fitness",
+      "fitness trainer",
+      "personal trainer",
+      "workout help",
+      "exercise help",
+      "fitness coaching",
+      "gym trainer"
+    ],
+    "Sports Coaching": [
+      "sports coach",
+      "sports coaching",
+      "coach",
+      "sports trainer",
+      "game coaching",
+      "training"
+    ],
+    "General Personal Assistance": [
+      "personal assistant",
+      "personal help",
+      "personal assistance",
+      "general help",
+      "help with personal tasks",
+      "assistant",
+      "personal helper"
+    ]
+  },
+
+  "EVENTS": {
+    "Event Setup": [
+      "event setup",
+      "event decoration setup",
+      "setup event",
+      "event preparation",
+      "function setup",
+      "function preparation",
+      "event helper"
+    ],
+    "Event Cleanup": [
+      "event cleanup",
+      "event cleaning",
+      "clean event venue",
+      "function cleanup",
+      "party cleanup",
+      "post event cleanup",
+      "venue cleanup"
+    ],
+    "Serving Food": [
+      "serve food",
+      "food serving",
+      "food server",
+      "event food service",
+      "waiter for event",
+      "serve at party",
+      "catering helper",
+      "catering staff"
+    ],
+    "Guest Assistance": [
+      "guest assistance",
+      "guest help",
+      "guest management",
+      "event guest helper",
+      "welcome guests",
+      "guest support",
+      "usher"
+    ],
+    "Decoration Assistance": [
+      "decoration",
+      "event decoration",
+      "party decoration",
+      "decoration help",
+      "decorate party",
+      "function decoration",
+      "decorator assistant"
+    ],
+    "Photography": [
+      "photography",
+      "photographer",
+      "event photographer",
+      "party photographer",
+      "wedding photographer",
+      "take event photos",
+      "event photos"
+    ],
+    "Videography": [
+      "videography",
+      "videographer",
+      "event videographer",
+      "party videographer",
+      "wedding videographer",
+      "event video",
+      "video recording"
+    ],
+    "Sound / Equipment Assistance": [
+      "sound setup",
+      "sound system",
+      "speaker setup",
+      "audio setup",
+      "event equipment",
+      "equipment setup",
+      "mic setup",
+      "DJ equipment setup"
+    ],
+    "Event Logistics": [
+      "event logistics",
+      "event management",
+      "event coordination",
+      "event coordinator",
+      "event planning help",
+      "event support",
+      "function management"
+    ]
+  },
+
+  "SPORTS & RECREATION": {
+    "Cricket": [
+      "cricket",
+      "play cricket",
+      "cricket partner",
+      "cricket buddy",
+      "cricket player",
+      "cricket practice",
+      "cricket coaching",
+      "cricket coach"
+    ],
+    "Football": [
+      "football",
+      "play football",
+      "football partner",
+      "football buddy",
+      "football player",
+      "football practice",
+      "football coaching",
+      "football coach"
+    ],
+    "Basketball": [
+      "basketball",
+      "play basketball",
+      "basketball partner",
+      "basketball buddy",
+      "basketball player",
+      "basketball practice",
+      "basketball coaching"
+    ],
+    "Badminton": [
+      "badminton",
+      "play badminton",
+      "badminton partner",
+      "badminton buddy",
+      "badminton player",
+      "badminton practice",
+      "badminton coaching"
+    ],
+    "Tennis": [
+      "tennis",
+      "play tennis",
+      "tennis partner",
+      "tennis buddy",
+      "tennis player",
+      "tennis practice",
+      "tennis coaching"
+    ],
+    "Table Tennis": [
+      "table tennis",
+      "tt",
+      "ping pong",
+      "play table tennis",
+      "table tennis partner",
+      "ping pong partner",
+      "table tennis player"
+    ],
+    "Volleyball": [
+      "volleyball",
+      "play volleyball",
+      "volleyball partner",
+      "volleyball player",
+      "volleyball practice",
+      "volleyball coaching"
+    ],
+    "Running Partner": [
+      "running",
+      "running partner",
+      "run with me",
+      "running buddy",
+      "jogging",
+      "jogging partner",
+      "run together"
+    ],
+    "Gym Partner": [
+      "gym partner",
+      "workout partner",
+      "gym buddy",
+      "workout buddy",
+      "gym",
+      "workout together",
+      "exercise partner"
+    ],
+    "Sports Coaching": [
+      "sports coaching",
+      "sports coach",
+      "coach",
+      "sports trainer",
+      "training",
+      "sports training",
+      "game coaching"
+    ]
+  }
 }

@@ -1,11 +1,13 @@
 import { useState, useEffect, useCallback } from "react";
 import api from "../../../../shared/lib/api";
+import { KeywordEditor } from "../components/KeywordEditor";
 
 interface SubcategoryAdmin {
   id: string;
   name: string;
   description: string | null;
   is_active: boolean;
+  keywords: string[];
 }
 
 interface CategoryAdmin {
@@ -28,11 +30,13 @@ export default function AdminCategoriesPage() {
   
   const [formName, setFormName] = useState("");
   const [formDesc, setFormDesc] = useState("");
+  const [formKeywords, setFormKeywords] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const openEditModal = (type: 'category' | 'subcategory', id: string, currentName: string, currentDesc: string | null, parentId?: string) => {
+  const openEditModal = (type: 'category' | 'subcategory', id: string, currentName: string, currentDesc: string | null, parentId?: string, currentKeywords?: string[]) => {
     setFormName(currentName);
     setFormDesc(currentDesc || "");
+    setFormKeywords(currentKeywords || []);
     setEditingEntity({ type, id, parentId });
   };
 
@@ -50,13 +54,14 @@ export default function AdminCategoriesPage() {
       } else {
         const { data } = await api.patch(`/admin/subcategories/${editingEntity.id}`, {
           name: formName,
-          description: formDesc || null
+          description: formDesc || null,
+          keywords: formKeywords
         });
         setCategories(prev => prev.map(c => {
           if (c.id === editingEntity.parentId) {
             return {
               ...c,
-              subcategories: c.subcategories.map(s => s.id === editingEntity.id ? { ...s, name: data.name, description: data.description } : s)
+              subcategories: c.subcategories.map(s => s.id === editingEntity.id ? { ...s, name: data.name, description: data.description, keywords: data.keywords } : s)
             };
           }
           return c;
@@ -65,6 +70,7 @@ export default function AdminCategoriesPage() {
       setEditingEntity(null);
       setFormName("");
       setFormDesc("");
+      setFormKeywords([]);
     } catch (err: any) {
       alert(err.response?.data?.detail || "Failed to update");
     } finally {
@@ -146,7 +152,8 @@ export default function AdminCategoriesPage() {
       const { data } = await api.post("/admin/subcategories", {
         category_id: subcategoryModalParentId,
         name: formName,
-        description: formDesc || null
+        description: formDesc || null,
+        keywords: formKeywords
       });
       
       setCategories(prev => prev.map(c => {
@@ -159,6 +166,7 @@ export default function AdminCategoriesPage() {
       setSubcategoryModalParentId(null);
       setFormName("");
       setFormDesc("");
+      setFormKeywords([]);
     } catch (err: any) {
       alert(err.response?.data?.detail || "Failed to create subcategory");
     } finally {
@@ -253,7 +261,7 @@ export default function AdminCategoriesPage() {
                         <span className={`text-sm font-medium ${!sub.is_active && 'line-through'}`}>{sub.name}</span>
                         <div className="flex items-center space-x-3">
                           <button 
-                            onClick={(e) => { e.stopPropagation(); openEditModal('subcategory', sub.id, sub.name, sub.description, cat.id); }}
+                            onClick={(e) => { e.stopPropagation(); openEditModal('subcategory', sub.id, sub.name, sub.description, cat.id, sub.keywords); }}
                             className="text-text-secondary hover:text-primary transition-colors text-lg"
                             title="Edit Subcategory"
                           >
@@ -269,6 +277,7 @@ export default function AdminCategoriesPage() {
                     onClick={() => {
                       setFormName("");
                       setFormDesc("");
+                      setFormKeywords([]);
                       setSubcategoryModalParentId(cat.id);
                     }}
                     className="text-sm text-primary font-medium hover:underline"
@@ -322,6 +331,9 @@ export default function AdminCategoriesPage() {
                   <label className="block text-sm font-medium text-text-secondary mb-1">Description (Optional)</label>
                   <input type="text" value={formDesc} onChange={e => setFormDesc(e.target.value)} className="w-full px-4 py-2 bg-bg border border-border rounded-lg outline-none focus:border-primary transition-colors" />
                 </div>
+                {editingEntity.type === 'subcategory' && (
+                  <KeywordEditor keywords={formKeywords} onKeywordsChange={setFormKeywords} />
+                )}
               </div>
               <div className="flex space-x-3 justify-end">
                 <button type="button" onClick={() => setEditingEntity(null)} className="px-4 py-2 text-text-secondary hover:bg-bg rounded-lg transition-colors font-medium">Cancel</button>
@@ -347,6 +359,7 @@ export default function AdminCategoriesPage() {
                   <label className="block text-sm font-medium text-text-secondary mb-1">Description (Optional)</label>
                   <input type="text" value={formDesc} onChange={e => setFormDesc(e.target.value)} className="w-full px-4 py-2 bg-bg border border-border rounded-lg outline-none focus:border-primary transition-colors" />
                 </div>
+                <KeywordEditor keywords={formKeywords} onKeywordsChange={setFormKeywords} />
               </div>
               <div className="flex space-x-3 justify-end">
                 <button type="button" onClick={() => setSubcategoryModalParentId(null)} className="px-4 py-2 text-text-secondary hover:bg-bg rounded-lg transition-colors font-medium">Cancel</button>

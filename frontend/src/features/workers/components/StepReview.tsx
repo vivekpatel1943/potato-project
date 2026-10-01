@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import type { DocumentData, ProofData } from "../schemas/workerOnboarding";
 import api from "../../../shared/lib/api";
 
@@ -37,6 +37,45 @@ export default function StepReview({
 }: Props) {
   const [categories, setCategories] = useState<Category[]>([]);
   const [viewImageUrl, setViewImageUrl] = useState<string | null>(null);
+  const [signedUrls, setSignedUrls] = useState<Record<string, string>>({});
+  const fetchedUrls = useRef<Set<string>>(new Set());
+
+  useEffect(() => {
+    let isMounted = true;
+    const fetchSignedUrls = async () => {
+      const urlsToSign = [
+        avatarUrl,
+        ...documents.map(d => d.document_url),
+        ...proofs.map(p => p.url)
+      ].filter(url => url && url.startsWith('r2://'));
+
+      for (const url of urlsToSign) {
+        if (fetchedUrls.current.has(url)) continue;
+        fetchedUrls.current.add(url);
+        
+        try {
+          const { data } = await api.post("/workers/download-url", { file_url: url });
+          if (isMounted) {
+            setSignedUrls(prev => ({ ...prev, [url]: data.download_url }));
+          }
+        } catch (err) {
+          console.error("Failed to fetch signed URL", err);
+          fetchedUrls.current.delete(url);
+        }
+      }
+    };
+    fetchSignedUrls();
+    return () => { 
+      isMounted = false; 
+      fetchedUrls.current.clear();
+    };
+  }, [avatarUrl, documents, proofs]);
+
+  const getDisplayUrl = (url: string) => {
+    if (!url) return "";
+    if (url.startsWith('r2://')) return signedUrls[url] || "";
+    return url;
+  };
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -74,10 +113,10 @@ export default function StepReview({
         </h4>
         <div className="flex items-center gap-3">
           <img
-            src={avatarUrl}
+            src={getDisplayUrl(avatarUrl)}
             alt="Profile"
             className="w-14 h-14 rounded-full object-cover border-2 border-border cursor-pointer hover:border-primary transition-colors"
-            onClick={() => setViewImageUrl(avatarUrl)}
+            onClick={() => setViewImageUrl(getDisplayUrl(avatarUrl))}
           />
           <span className="text-sm text-success font-medium">✓ Uploaded</span>
         </div>
@@ -93,10 +132,12 @@ export default function StepReview({
              <div 
                key={i} 
                onClick={() => {
+                 const displayUrl = getDisplayUrl(doc.document_url);
+                 if (!displayUrl) return;
                  if (doc.document_url.endsWith('.pdf')) {
-                   window.open(doc.document_url, '_blank');
+                   window.open(displayUrl, '_blank');
                  } else {
-                   setViewImageUrl(doc.document_url);
+                   setViewImageUrl(displayUrl);
                  }
                }} 
                className="cursor-pointer border border-border rounded-lg p-2 text-center hover:border-primary transition-colors bg-bg"
@@ -107,7 +148,7 @@ export default function StepReview({
                    <span className="text-[10px] font-bold uppercase">PDF</span>
                  </div>
                ) : (
-                 <img src={doc.document_url} alt="doc" className="w-full h-20 object-cover rounded mb-2 bg-gray-100" />
+                 <img src={getDisplayUrl(doc.document_url)} alt="doc" className="w-full h-20 object-cover rounded mb-2 bg-gray-100" />
                )}
                <p className="text-[11px] font-medium leading-tight text-text truncate">{DOC_TYPE_LABELS[doc.document_type] || doc.document_type}</p>
                {doc.document_number && <p className="text-[10px] text-text-secondary mt-1 truncate">{doc.document_number}</p>}
@@ -132,11 +173,15 @@ export default function StepReview({
                 {proofs.filter(p => p.subcategory_id === service.id).map((proof, i) => (
                    <div 
                      key={i}
-                     onClick={() => proof.proof_type === 'image' ? setViewImageUrl(proof.url) : window.open(proof.url, '_blank')}
+                     onClick={() => {
+                       const displayUrl = getDisplayUrl(proof.url);
+                       if (!displayUrl) return;
+                       proof.proof_type === 'image' ? setViewImageUrl(displayUrl) : window.open(displayUrl, '_blank');
+                     }}
                      className="w-16 h-16 rounded-lg border border-border cursor-pointer overflow-hidden hover:opacity-80 transition-opacity bg-bg flex flex-col items-center justify-center"
                      title={proof.proof_type === 'image' ? 'View Image' : `Open ${proof.proof_type}`}
                    >
-                     {proof.proof_type === 'image' && <img src={proof.url} className="w-full h-full object-cover" />}
+                     {proof.proof_type === 'image' && <img src={getDisplayUrl(proof.url)} className="w-full h-full object-cover" />}
                      {proof.proof_type === 'video' && <><span className="text-xl">🎥</span><span className="text-[10px] mt-1">Video</span></>}
                      {proof.proof_type === 'doc' && <><span className="text-xl text-blue-500">📄</span><span className="text-[10px] mt-1 text-blue-500 font-medium">PDF</span></>}
                    </div>

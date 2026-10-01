@@ -216,10 +216,15 @@ async def create_worker_profile(
             detail="Phone verification is required before creating a worker profile.",
         )
 
+    home_base_wkt = None
+    if data.home_base_lat is not None and data.home_base_lng is not None:
+        home_base_wkt = f"POINT({data.home_base_lng} {data.home_base_lat})"
+
     # 1. Create the profile
     profile = WorkerProfile(
         user_id=user.id,
         avatar_url=data.avatar_url,
+        home_base=home_base_wkt,
         is_available=False,  # must be toggled on manually
     )
     db.add(profile)
@@ -323,8 +328,10 @@ async def update_worker_profile(
         for doc_data in data.verification_documents:
             db.add(WorkerVerificationDocument(worker_id=profile.user_id, **doc_data.model_dump()))
 
-    # 3. Update Avatar
+    # 3. Update Avatar and Location
     profile.avatar_url = data.avatar_url
+    if data.home_base_lat is not None and data.home_base_lng is not None:
+        profile.home_base = f"POINT({data.home_base_lng} {data.home_base_lat})"
 
     # 4. Validate Subcategories exist in taxonomy
     requested_sub_ids = [cap.subcategory_id for cap in data.capabilities]
@@ -382,7 +389,50 @@ async def toggle_availability(
             detail="Worker profile not found.",
         )
 
+    if is_available and profile.verification_status != VerificationStatus.VERIFIED:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="You must be verified to go online.",
+        )
+
     profile.is_available = is_available
     await db.commit()
     await db.refresh(profile)
     return profile
+
+async def get_public_workers(db: AsyncSession, skip: int = 0, limit: int = 10) -> list[dict]:
+    # Fetch profiles that are verified and available, joined with their user and capabilities
+    stmt = (
+        select(WorkerProfile, User)
+        .options(
+            selectinload(WorkerProfile.capabilities).selectinload(WorkerCapability.subcategory)
+        )
+        .join(User, WorkerProfile.user_id == User.id)
+        .where(
+            WorkerProfile.is_available == True,
+            WorkerProfile.verification_status == VerificationStatus.VERIFIED
+        )
+        .offset(skip)
+        .limit(limit)
+    )
+    result = await db.execute(stmt)
+    rows = result.all()
+
+    # Build the dictionary response that matches WorkerPublicCardOut
+    workers = []
+    for profile, user in rows:
+        subcats = [
+            cap.subcategory.name 
+            for cap in profile.capabilities 
+            if cap.subcategory
+        ]
+        
+        workers.append({
+            "user_id": profile.user_id,
+            "user_name": user.user_name,
+            "avatar_url": profile.avatar_url,
+            "rating": 4.8, # Mock
+            "tasks_delivered": 24, # Mock
+            "capabilities": subcats
+        })
+    return workers

@@ -12,5 +12,6 @@ class UserMeOut(BaseModel):
     is_active: bool
     is_email_verified: bool
     is_phone_verified: bool
+    has_worker_profile: bool = False
 
     model_config = {"from_attributes": True}

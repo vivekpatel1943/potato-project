@@ -64,7 +64,8 @@ async def update_subcategory(
     subcategory_id: str, 
     is_active: bool | None = None,
     name: str | None = None,
-    description: str | None = None
+    description: str | None = None,
+    keywords: list[str] | None = None
 ) -> Subcategory:
     result = await db.execute(select(Subcategory).where(Subcategory.id == uuid.UUID(subcategory_id)))
     subcategory = result.scalars().first()
@@ -85,6 +86,11 @@ async def update_subcategory(
         
     if is_active is not None:
         subcategory.is_active = is_active
+
+  
+    if keywords is not None:
+        subcategory.keywords = keywords 
+      
 
     await db.commit()
     await flush_categories_cache(redis)
@@ -109,7 +115,7 @@ async def create_category(db: AsyncSession, redis: Redis | None, name: str, desc
     return category
 
 
-async def create_subcategory(db: AsyncSession, redis: Redis | None, category_id: str, name: str, description: str | None) -> Subcategory:
+async def create_subcategory(db: AsyncSession, redis: Redis | None, category_id: str, name: str, description: str | None,keywords:list[str]|None=None) -> Subcategory:
     # Ensure parent exists
     result = await db.execute(select(Category).where(Category.id == uuid.UUID(category_id)))
     if not result.scalars().first():
@@ -120,7 +126,7 @@ async def create_subcategory(db: AsyncSession, redis: Redis | None, category_id:
     if sub_result.scalars().first():
         raise HTTPException(status_code=400, detail="Subcategory with this name already exists in this category.")
         
-    subcategory = Subcategory(category_id=uuid.UUID(category_id), name=name, description=description, is_active=True)
+    subcategory = Subcategory(category_id=uuid.UUID(category_id), name=name, description=description,is_active=True,keywords=keywords or [])
     db.add(subcategory)
     await db.commit()
     await db.refresh(subcategory)

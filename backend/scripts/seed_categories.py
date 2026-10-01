@@ -18,7 +18,7 @@ async def seed_categories():
         data = json.load(f)
         
     async with AsyncSessionLocal() as session:
-        for parent_name, sub_names in data.items():
+        for parent_name, subcategories_dict in data.items():
             # 1. Check if parent exists
             result = await session.execute(select(Category).where(Category.name == parent_name))
             parent = result.scalars().first()
@@ -30,7 +30,7 @@ async def seed_categories():
                 await session.flush() # To get the parent.id immediately
                 
             # 2. Check and insert subcategories
-            for sub_name in sub_names:
+            for sub_name, keywords_list in subcategories_dict.items():
                 sub_result = await session.execute(
                     select(Subcategory).where(
                         Subcategory.category_id == parent.id,
@@ -41,8 +41,12 @@ async def seed_categories():
                 
                 if not sub:
                     print(f"  - Creating subcategory: {sub_name}")
-                    sub = Subcategory(category_id=parent.id, name=sub_name)
+                    sub = Subcategory(category_id=parent.id, name=sub_name, keywords=keywords_list)
                     session.add(sub)
+                else:
+                    if sub.keywords != keywords_list:
+                        sub.keywords = keywords_list
+                        session.add(sub)
                     
         print("Committing to database...")
         await session.commit()

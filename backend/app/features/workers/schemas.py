@@ -27,12 +27,16 @@ class CapabilityCreate(BaseModel):
 
 class WorkerProfileCreate(BaseModel):
     avatar_url: str
+    home_base_lat: float | None = None
+    home_base_lng: float | None = None
     verification_documents: list[VerificationDocumentCreate] = Field(..., min_length=1)
     capabilities: list[CapabilityCreate] = Field(..., min_length=1)
 
 
 class WorkerProfileUpdate(BaseModel):
     avatar_url: str
+    home_base_lat: float | None = None
+    home_base_lng: float | None = None
     verification_documents: list[VerificationDocumentCreate] = Field(..., min_length=1)
     capabilities: list[CapabilityCreate] = Field(..., min_length=1)
 
@@ -118,5 +122,15 @@ class WorkerProfileOut(BaseModel):
     verification_status: VerificationStatus
     capabilities: list[CapabilityOut] = []
     verification_documents: list[VerificationDocumentOut] = []
+
+    model_config = {"from_attributes": True}
+
+class WorkerPublicCardOut(BaseModel):
+    user_id: uuid.UUID
+    user_name: str
+    avatar_url: str
+    rating: float = 4.8
+    tasks_delivered: int = 24
+    capabilities: list[str]
 
     model_config = {"from_attributes": True}

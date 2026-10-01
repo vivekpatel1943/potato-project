@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db.session import get_async_db
@@ -17,6 +17,7 @@ from app.features.workers.schemas import (
     DraftResponse,
     DeleteUploadRequest,
     CapabilityOut,
+    WorkerPublicCardOut,
 )
 from app.features.workers.service import (
     create_worker_profile,
@@ -28,9 +29,19 @@ from app.features.workers.service import (
     upsert_onboarding_draft,
     get_onboarding_draft,
     delete_upload_from_r2,
+    get_public_workers,
 )
 
 router = APIRouter(prefix="/workers", tags=["Workers"])
+
+@router.get("/", response_model=list[WorkerPublicCardOut])
+async def get_browse_workers(
+    skip: int = Query(0, ge=0),
+    limit: int = Query(10, ge=1, le=50),
+    db: AsyncSession = Depends(get_async_db)
+):
+    """Get a list of all public, verified, and available workers with pagination."""
+    return await get_public_workers(db, skip, limit)
 
 
 # ── Presigned Upload URL ──────────────────────────────────────────────────
