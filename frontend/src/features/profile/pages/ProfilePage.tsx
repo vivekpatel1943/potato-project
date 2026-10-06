@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import api from "../../../shared/lib/api";
 import { useAuthStore } from "../../auth/stores/authStore";
 import { useAppStore } from "../../app/stores/appStore";
+import { ensurePushSubscription } from "../../../shared/lib/pushManager";
+import { subscribeTrackerStatus, type TrackerStatus } from "../../../shared/lib/locationTracker";
 
 interface WorkerProfileData {
   user_id: string;
@@ -26,12 +28,15 @@ const STATUS_STYLES: Record<string, { bg: string; text: string; label: string }>
 export default function ProfilePage() {
   const navigate = useNavigate();
   const { userName, isPhoneVerified } = useAuthStore();
-  const { hasWorkerProfile, isAvailable, setAvailable } = useAppStore();
+  const { hasWorkerProfile, isAvailable, setAvailable, setWorkerProfile: setWorkerState } = useAppStore();
 
   const [workerProfile, setWorkerProfile] = useState<WorkerProfileData | null>(null);
   const [isTogglingAvailability, setIsTogglingAvailability] = useState(false);
   const [showToast, setShowToast] = useState<string | null>(null);
   const [isLoadingProfile, setIsLoadingProfile] = useState(false);
+  const [trackerStatus, setTrackerStatus] = useState<TrackerStatus>("idle");
+
+  useEffect(() => subscribeTrackerStatus(setTrackerStatus), []);
 
   // Fetch worker profile if exists
   useEffect(() => {
@@ -41,7 +46,7 @@ export default function ProfilePage() {
       try {
         const { data } = await api.get("/workers/me");
         setWorkerProfile(data);
-        setAvailable(data.is_available);
+        setWorkerState(true, data.verification_status === "verified", data.is_available);
       } catch {
         // Profile might not exist yet
       } finally {
@@ -49,13 +54,17 @@ export default function ProfilePage() {
       }
     };
     fetchProfile();
-  }, [hasWorkerProfile, setAvailable]);
+  }, [hasWorkerProfile, setWorkerState]);
 
   const handleToggleAvailability = useCallback(async () => {
     if (!workerProfile) return;
     setIsTogglingAvailability(true);
     try {
       const newValue = !isAvailable;
+      // Ask for notification permission inside the click gesture, so the
+      // browser actually shows the prompt. Location polling then starts
+      // automatically (WorkerPresence) once isAvailable flips to true.
+      if (newValue) ensurePushSubscription({ prompt: true });
       await api.patch("/workers/me/availability", { is_available: newValue });
       setAvailable(newValue);
       setWorkerProfile((prev) => prev ? { ...prev, is_available: newValue } : prev);
@@ -186,6 +195,35 @@ export default function ProfilePage() {
                 />
               </button>
             </div>
+            {isAvailable && workerProfile.verification_status === "verified" && (
+              <div className="mt-4 pt-4 border-t border-border flex items-center gap-2 text-xs">
+                {trackerStatus === "active" && (
+                  <>
+                    <span className="relative flex h-2.5 w-2.5">
+                      <span className="absolute inline-flex h-full w-full rounded-full bg-success opacity-60 animate-ping" />
+                      <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-success" />
+                    </span>
+                    <span className="text-text-secondary">Sharing live location for nearby task matching</span>
+                  </>
+                )}
+                {trackerStatus === "idle" && (
+                  <span className="text-text-secondary">Getting your location…</span>
+                )}
+                {trackerStatus === "denied" && (
+                  <span className="text-error">
+                    Location permission denied — we'll match you using your home base. Enable location in browser settings for better matches.
+                  </span>
+                )}
+                {trackerStatus === "unsupported" && (
+                  <span className="text-text-secondary">
+                    Live location needs HTTPS (or localhost). Matching uses your home base.
+                  </span>
+                )}
+                {trackerStatus === "error" && (
+                  <span className="text-text-secondary">Couldn't update location — retrying automatically.</span>
+                )}
+              </div>
+            )}
           </div>
 
           {/* Verification Status */}

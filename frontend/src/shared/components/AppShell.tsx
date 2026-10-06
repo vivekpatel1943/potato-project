@@ -50,12 +50,14 @@ interface NavTab {
 const customerTabs: NavTab[] = [
   { to: "/dashboard", label: "Home", icon: HomeIcon, id: "nav-home" },
   { to: "/browse-workers", label: "Workers", icon: SearchIcon, id: "nav-browse" },
+  { to: "/tasks/my-tasks", label: "My Tasks", icon: BriefcaseIcon, id: "nav-my-tasks" },
   { to: "/profile", label: "Profile", icon: UserIcon, id: "nav-profile" },
 ];
 
 const workerTabs: NavTab[] = [
   { to: "/dashboard", label: "Dashboard", icon: HomeIcon, id: "nav-dashboard" },
-  { to: "/find-tasks", label: "Tasks", icon: BriefcaseIcon, id: "nav-tasks" },
+  { to: "/tasks/available", label: "Find Tasks", icon: SearchIcon, id: "nav-tasks" },
+  { to: "/tasks/my-applications", label: "My Jobs", icon: BriefcaseIcon, id: "nav-applications" },
   { to: "/profile", label: "Profile", icon: UserIcon, id: "nav-profile" },
 ];
 

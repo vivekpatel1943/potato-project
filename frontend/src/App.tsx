@@ -13,6 +13,15 @@ import AdminDashboardPage from "./features/admin/dashboard/pages/AdminDashboardP
 import AdminRolesPage from "./features/admin/role_management/pages/AdminRolesPage";
 import AdminCachesPage from "./features/admin/caches/pages/AdminCachesPage";
 import AdminCategoriesPage from "./features/admin/category_management/pages/AdminCategoriesPage";
+import AdminApprovalsPage from "./features/admin/worker_approval/pages/AdminApprovalsPage";
+import AdminWorkerDetailPage from "./features/admin/worker_approval/pages/AdminWorkerDetailPage";
+import SearchAnalyticsPage from "./features/admin/search_analytics/pages/SearchAnalyticsPage";
+
+// Task pages
+import MyTasksPage from "./features/tasks/pages/MyTasksPage";
+import AvailableTasksPage from "./features/tasks/pages/AvailableTasksPage";
+import MyApplicationsPage from "./features/tasks/pages/MyApplicationsPage";
+import TaskDetailPage from "./features/tasks/pages/TaskDetailPage";
 
 export default function App() {
   return (
@@ -32,6 +41,12 @@ export default function App() {
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/browse-workers" element={<BrowseWorkersPage />} />
+            
+            {/* Task routes */}
+            <Route path="/tasks/my-tasks" element={<MyTasksPage />} />
+            <Route path="/tasks/available" element={<AvailableTasksPage />} />
+            <Route path="/tasks/my-applications" element={<MyApplicationsPage />} />
+            <Route path="/tasks/:id" element={<TaskDetailPage />} />
 
             {/* Admin routes — nested under ProtectedRoute + AppShell + AdminRoute */}
             <Route element={<AdminRoute />}>
@@ -39,6 +54,9 @@ export default function App() {
               <Route path="/admin/roles" element={<AdminRolesPage />} />
               <Route path="/admin/caches" element={<AdminCachesPage />} />
               <Route path="/admin/categories" element={<AdminCategoriesPage />} />
+              <Route path="/admin/approvals" element={<AdminApprovalsPage />} />
+              <Route path="/admin/approvals/:userId" element={<AdminWorkerDetailPage />} />
+              <Route path="/admin/search-analytics" element={<SearchAnalyticsPage />} />
             </Route>
           </Route>
         </Route>

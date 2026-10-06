@@ -31,11 +31,18 @@ const adminCards: AdminCard[] = [
     ready: true,
   },
   {
-    to: "/admin",
+    to: "/admin/approvals",
     icon: "✅",
     title: "Worker Approvals",
     description: "Review and approve worker profiles.",
-    ready: false,
+    ready: true,
+  },
+  {
+    to: "/admin/search-analytics",
+    icon: "📈",
+    title: "Search Analytics",
+    description: "See what customers search for, and where.",
+    ready: true,
   },
 ];
 

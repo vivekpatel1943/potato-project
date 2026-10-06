@@ -1,7 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.ext.asyncio import AsyncSession
+from redis.asyncio import Redis
 
 from app.db.session import get_async_db
+from app.db.redis import get_redis
 from app.features.auth.dependencies import get_current_user
 from app.features.users.models import User
 from app.features.workers.schemas import (
@@ -9,6 +11,7 @@ from app.features.workers.schemas import (
     WorkerProfileUpdate,
     WorkerProfileOut,
     AvailabilityUpdate,
+    LocationUpdate,
     PresignedUrlRequest,
     PresignedUrlResponse,
     PresignedGetRequest,
@@ -31,6 +34,9 @@ from app.features.workers.service import (
     delete_upload_from_r2,
     get_public_workers,
 )
+from app.features.workers.location import set_worker_location
+from app.features.workers.enums import VerificationStatus
+from app.features.workers.models import WorkerProfile
 
 router = APIRouter(prefix="/workers", tags=["Workers"])
 
@@ -176,6 +182,29 @@ async def update_availability(
     await toggle_availability(db, user.id, body.is_available)
     profile = await get_worker_profile(db, user.id)
     return _build_profile_response(profile)
+
+
+@router.post("/me/location", status_code=status.HTTP_204_NO_CONTENT)
+async def update_location(
+    body: LocationUpdate,
+    user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_async_db),
+    redis: Redis = Depends(get_redis),
+):
+    """Store the worker's live GPS location in Redis (2h TTL).
+
+    Called automatically by the frontend on an interval while the worker is online.
+    """
+    profile = await db.get(WorkerProfile, user.id)
+    if not profile:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Worker profile not found.")
+    if profile.verification_status != VerificationStatus.VERIFIED or not profile.is_available:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="Location is only tracked while you are verified and online.",
+        )
+
+    await set_worker_location(redis, user.id, body.latitude, body.longitude)
 
 
 # ── Helpers ───────────────────────────────────────────────────────────────

@@ -45,6 +45,11 @@ class AvailabilityUpdate(BaseModel):
     is_available: bool
 
 
+class LocationUpdate(BaseModel):
+    latitude: float = Field(..., ge=-90, le=90)
+    longitude: float = Field(..., ge=-180, le=180)
+
+
 # ── Presigned URL Schemas ──────────────────────────────────────────────────
 
 

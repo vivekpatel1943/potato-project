@@ -18,18 +18,27 @@ export default function UserSync() {
     const syncUser = async () => {
       try {
         const { data } = await api.get("/users/me");
-        if (!cancelled) {
-          setUser(data.user_name, false, data.role);
-          setPhoneVerified(data.is_phone_verified);
+        if (cancelled) return;
 
-          // Sync worker profile presence without overwriting other cached states
-          const currentStore = useAppStore.getState();
-          if (data.has_worker_profile !== currentStore.hasWorkerProfile) {
-            setWorkerProfile(
-              data.has_worker_profile,
-              currentStore.isWorkerVerified,
-              currentStore.isAvailable
-            );
+        setUser(data.user_name, false, data.role);
+        setPhoneVerified(data.is_phone_verified);
+
+        if (!data.has_worker_profile) {
+          setWorkerProfile(false, false, false);
+          return;
+        }
+
+        // Pull verification + online state so location tracking
+        // (WorkerPresence) starts/stops from fresh data, not stale localStorage.
+        try {
+          const { data: wp } = await api.get("/workers/me");
+          if (!cancelled) {
+            setWorkerProfile(true, wp.verification_status === "verified", wp.is_available);
+          }
+        } catch {
+          if (!cancelled) {
+            const s = useAppStore.getState();
+            setWorkerProfile(true, s.isWorkerVerified, s.isAvailable);
           }
         }
       } catch {

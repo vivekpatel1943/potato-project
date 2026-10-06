@@ -41,9 +41,18 @@ class Settings(BaseSettings):
     phone_rate_limit_seconds: int = 60
 
     # CORS
-    cors_origins: str = "http://localhost:5173,http://192.168.1.19:5173,http://192.168.1.24:5173"  # comma-separated for multiple
+    cors_origins: str = "http://localhost:5173,http://192.168.1.19:5173,http://192.168.1.24:5173,https://renegade-granular-overtly.ngrok-free.dev"  # comma-separated for multiple
 
     # Phone verification (WhatsApp)
     whatsapp_verify_number: str = "918103614609"
     phone_verify_expiry_seconds: int = 300
     phone_verify_code_length: int = 6
+
+    # Web Push (VAPID). If keys are empty, push sending is skipped with a warning.
+    vapid_private_key: str = ""
+    vapid_public_key: str = ""
+    vapid_claim_email: str = "mailto:vivekptl391@gmail.com"
+
+    # Task matching
+    search_radius_km: float = 10.0
+    worker_location_ttl_seconds: int = 7200  # live GPS stays valid for 2 hours

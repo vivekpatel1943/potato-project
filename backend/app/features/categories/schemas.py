@@ -18,3 +18,12 @@ class CategoryOut(BaseModel):
     subcategories: list[SubcategoryOut] = []
 
     model_config = {"from_attributes": True}
+
+
+class SubcategorySearchOut(BaseModel):
+    id: uuid.UUID
+    name: str
+    description: str | None = None
+    keywords: list[str] = []
+    category_id: uuid.UUID
+    category_name: str

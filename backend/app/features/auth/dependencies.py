@@ -72,3 +72,27 @@ async def get_current_admin(
             detail="Admin privileges required.",
         )
     return current_user
+
+
+optional_security = HTTPBearer(auto_error=False)
+
+
+def get_optional_user_id(
+    credentials: HTTPAuthorizationCredentials | None = Depends(optional_security),
+) -> uuid.UUID | None:
+    """
+    Returns the user id from a valid bearer token, otherwise None.
+    - Never raises (guests, expired, or bad tokens all become None).
+    - No DB query: analytics doesn't need to check that the user exists or is active.
+    """
+    if credentials is None:
+        return None
+    try:
+        payload = jwt.decode(
+            credentials.credentials, settings.jwt_secret_key, algorithms=[settings.jwt_algorithm]
+        )
+        sub = payload.get("sub")
+        return uuid.UUID(sub) if sub else None
+    except (jwt.InvalidTokenError, ValueError):
+        return None
+

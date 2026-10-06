@@ -354,14 +354,13 @@ async def update_worker_profile(
     for cap_data in data.capabilities:
         if cap_data.subcategory_id in existing_caps:
             cap = existing_caps[cap_data.subcategory_id]
+            # Clear old proofs and add incoming ones directly from the nested payload
+            for proof in cap.proofs:
+                await db.delete(proof)
         else:
             cap = WorkerCapability(worker_id=profile.user_id, subcategory_id=cap_data.subcategory_id)
             db.add(cap)
             await db.flush()
-
-        # Clear old proofs and add incoming ones directly from the nested payload
-        for proof in cap.proofs:
-            await db.delete(proof)
         
         for p_data in cap_data.proofs:
             db.add(WorkerCapabilityProof(
